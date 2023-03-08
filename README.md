@@ -66,4 +66,5 @@ This shader makes use of item_displays not culling when out of player view. The 
 ## credits
 
 **Resonance#3633** - providing custom models and base template
+
 **https://github.com/sireroo** - mild inspiration
