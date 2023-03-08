@@ -3,6 +3,8 @@ models + shaders to display player models using new item_display entites.
 
 **This shader is stable on death, relog, unload, placed skulls, etc. The shader is not spawn order dependent.**
 
+<img src="images/1.png" /> 
+
 ## caveats
 - use on item_display only
 - limited support for translucent skins (will dither instead)
