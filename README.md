@@ -63,3 +63,7 @@ models + shaders to display player models using new item_display entites.
 
 This shader makes use of item_displays not culling when out of player view. The translation can be set to a high value `n, 2n, 3n ...` to signal the shader. As long as the player is within `n/2` vertical distance of the model, the shader will be able to correctly identify the intended texture UVs to load.
   
+## credits
+
+**Resonance#3633** - providing custom models and base template
+**https://github.com/sireroo** - mild inspiration
