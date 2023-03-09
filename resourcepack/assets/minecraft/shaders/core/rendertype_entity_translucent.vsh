@@ -28,6 +28,7 @@ out vec4 vertexColor;
 out vec4 lightMapColor;
 out vec4 overlayColor;
 out vec2 texCoord0;
+out vec2 texCoord1;
 out vec4 normal;
 out float part;
 
@@ -79,12 +80,14 @@ void main() {
     if (dim.x != 64 || dim.y != 64) { // short circuit if cannot be player
         part = 0.0;
         texCoord0 = UV0;
+        texCoord1 = vec2(0.0);
         vertexDistance = fog_distance(ModelViewMat, IViewRotMat * Position, FogShape);
         gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
     }
     else {
         vec3 wpos = IViewRotMat * Position;
         vec2 UVout = UV0;
+        vec2 UVout2 = vec2(0.0);
         int partId = -int((wpos.y - MAXRANGE) / SPACING);
 
         part = float(partId);
@@ -105,6 +108,7 @@ void main() {
             gl_Position = ProjMat * ModelViewMat * vec4(inverse(IViewRotMat) * wpos, 1.0);
             
             UVout = origins[2 * (partId - 1) + outerLayer];
+            UVout2 = origins[2 * (partId - 1)];
 
             if (slim && (partId == 1 || partId == 2)) {
                 subuvIndex += 6;
@@ -115,38 +119,44 @@ void main() {
 
             vec4 subuv = subuvs[subuvIndex];
 
+            vec2 offset = vec2(0.0);
             if (faceId == 1) {
                 if (vertexId == 0) {
-                    UVout += subuv.zw;
+                    offset += subuv.zw;
                 }
                 else if (vertexId == 1) {
-                    UVout += subuv.xw;
+                    offset += subuv.xw;
                 }
                 else if (vertexId == 2) {
-                    UVout += subuv.xy;
+                    offset += subuv.xy;
                 }
                 else {
-                    UVout += subuv.zy;
+                    offset += subuv.zy;
                 }
             }
             else {
                 if (vertexId == 0) {
-                    UVout += subuv.zy;
+                    offset += subuv.zy;
                 }
                 else if (vertexId == 1) {
-                    UVout += subuv.xy;
+                    offset += subuv.xy;
                 }
                 else if (vertexId == 2) {
-                    UVout += subuv.xw;
+                    offset += subuv.xw;
                 }
                 else {
-                    UVout += subuv.zw;
+                    offset += subuv.zw;
                 }
             }
+
+            UVout += offset;
+            UVout2 += offset;
             UVout /= 64.0;
+            UVout2 /= 64.0;
         }
 
         vertexDistance = fog_distance(ModelViewMat, wpos, FogShape);
         texCoord0 = UVout;
+        texCoord1 = UVout2;
     }
 }

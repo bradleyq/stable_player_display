@@ -18,6 +18,7 @@ in vec4 vertexColor;
 in vec4 lightMapColor;
 in vec4 overlayColor;
 in vec2 texCoord0;
+in vec2 texCoord1;
 in vec4 normal;
 in float part;
 
@@ -29,10 +30,12 @@ void main() {
         discard;
     }
     if (color.a < 1.0 && part > 0.5) {
+        vec4 color2 = texture(Sampler0, texCoord1);
         if (color.a < 0.75 && int(gl_FragCoord.x + gl_FragCoord.y) % 2 == 0) {
             discard;
         }
         else {
+            color.rgb = mix(color2.rgb, color.rgb, min(1.0, color.a * 2));
             color.a = 1.0;
         }
     }
