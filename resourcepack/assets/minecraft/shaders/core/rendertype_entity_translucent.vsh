@@ -77,7 +77,7 @@ void main() {
 
     ivec2 dim = textureSize(Sampler0, 0);
 
-    if (ProjMat[3][2] == -2.0 || dim.x != 64 || dim.y != 64) { // short circuit if cannot be player
+    if (ProjMat[2][3] == 0.0 || dim.x != 64 || dim.y != 64) { // short circuit if cannot be player
         part = 0.0;
         texCoord0 = UV0;
         texCoord1 = vec2(0.0);
