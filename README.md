@@ -69,6 +69,8 @@ models + shaders to display player models using new item_display entites.
 
 Since this resource pack operates purely on a y offset, converting existing Animated Java animations to use Stable Player Display is rather simple. Just add a corresponding y offset to each transformation. See contents of `animated-java-resources`
 
+**Warning! AJ supports Rotation[1] but Stable Player Display does not! Do not summon AJ rigs with Rotation[1]! Use a command block to be safe!**
+
 1. Create player animation using rig similar to `player_anim.ajmodel` 
    - **bone dimension and name should not be changed!**
    -  Pivot should remain consistent! If they are changed in AJ, update them in the Stable Player Display model as well
