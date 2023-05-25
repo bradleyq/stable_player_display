@@ -75,6 +75,7 @@ Since this resource pack operates purely on a y offset, converting existing Anim
    - **bone dimension and name should not be changed!**
    -  Pivot should remain consistent! If they are changed in AJ, update them in the Stable Player Display model as well
    -  Item for player in AJ does not matter, it can be discarded later
+   -  Model generated with AJ 0.3.9b
 2. Export animation to a dummy resource pack (**not stable player display**) and datapack
 3. Run `aj-convert.py` in datapack root folder
    - **only run this script once per AJ export!**
