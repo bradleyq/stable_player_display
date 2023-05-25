@@ -67,7 +67,35 @@ models + shaders to display player models using new item_display entites.
 
 ## compatibility with Animated Java
 
-Since this resource pack operates purely on a y offset, converting existing Animated Java animations to use Stable Player Display is rather simple. Simply add a corresponding y offset to each transformation.
+Since this resource pack operates purely on a y offset, converting existing Animated Java animations to use Stable Player Display is rather simple. Just add a corresponding y offset to each transformation. See contents of `animated-java-resources`
+
+1. Create player animation using rig similar to `player_anim.ajmodel` 
+   - **bone dimension and name should not be changed!**
+   -  Pivot should remain consistent! If they are changed in AJ, update them in the Stable Player Display model as well
+   -  Item for player in AJ does not matter, it can be discarded later
+2. Export animation to a dummy resource pack (**not stable player display**) and datapack
+3. Run `aj-convert.py` in datapack root folder
+   - requires `python3`
+   - requires `nbtlib` https://pypi.org/project/nbtlib/
+   - usage: `aj-convert.py [project] [optional:flags]`
+```
+    available flags:
+            -ns=[namespace]         project namespace. Default 'zzz'
+            -pn=[playerName]        player skin to use. Default '' no skin, must be set later in game
+            -s                      slim model. Default disabled
+```
+   - **only run this script once per AJ export!**
+4. Delete AJ resource pack if no other assets needed
+   - AJ generated player assets are not needed since Stable Player Display is being used instead
+5. Use the provided loot tables (slim available as well) to update the AJ model in game:
+```
+/loot replace entity @e[tag=aj.player_anim.bone.head] hotbar.0 loot player_anim:player/head
+/loot replace entity @e[tag=aj.player_anim.bone.right_arm] hotbar.0 loot player_anim:player/right_arm
+/loot replace entity @e[tag=aj.player_anim.bone.left_arm] hotbar.0 loot player_anim:player/left_arm
+/loot replace entity @e[tag=aj.player_anim.bone.torso] hotbar.0 loot player_anim:player/torso
+/loot replace entity @e[tag=aj.player_anim.bone.right_leg] hotbar.0 loot player_anim:player/right_leg
+/loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot player_anim:player/left_leg
+```
 
 ## how it works
 
