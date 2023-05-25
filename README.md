@@ -75,6 +75,7 @@ Since this resource pack operates purely on a y offset, converting existing Anim
    -  Item for player in AJ does not matter, it can be discarded later
 2. Export animation to a dummy resource pack (**not stable player display**) and datapack
 3. Run `aj-convert.py` in datapack root folder
+   - **only run this script once per AJ export!**
    - requires `python3`
    - requires `nbtlib` https://pypi.org/project/nbtlib/
    - usage: `aj-convert.py [project] [optional:flags]`
@@ -84,7 +85,6 @@ Since this resource pack operates purely on a y offset, converting existing Anim
             -pn=[playerName]        player skin to use. Default '' no skin, must be set later in game
             -s                      slim model. Default disabled
 ```
-   - **only run this script once per AJ export!**
 4. Delete AJ resource pack if no other assets needed
    - AJ generated player assets are not needed since Stable Player Display is being used instead
 5. Use the provided loot tables (slim available as well) to update the AJ model in game:
