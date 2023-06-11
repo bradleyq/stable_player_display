@@ -75,7 +75,7 @@ Since this resource pack operates purely on a y offset, converting existing Anim
    - **bone dimension and name should not be changed!**
    -  Pivot should remain consistent! If they are changed in AJ, update them in the Stable Player Display model as well
    -  Item for player in AJ does not matter, it can be discarded later
-   -  Model generated with AJ 0.3.9b
+   -  Model generated with AJ 0.4.2
 2. Export animation to a dummy resource pack (**not stable player display**) and datapack
 3. Run `aj-convert.py` in datapack root folder
    - **only run this script once per AJ export!**
@@ -83,10 +83,10 @@ Since this resource pack operates purely on a y offset, converting existing Anim
    - requires `nbtlib` https://pypi.org/project/nbtlib/
    - usage: `aj-convert.py [project] [optional:flags]`
 ```
-    available flags:
-            -ns=[namespace]         project namespace. Default 'zzz'
-            -pn=[playerName]        player skin to use. Default '' no skin, must be set later in game
-            -s                      slim model. Default disabled
+available flags:
+        -ns=[namespace]         internal project namespace. Default 'zzzzzzzz'
+        -pn=[playerName]        player skin to use. Default '' no skin, must be set later in game
+        -s                      slim model. Default disabled
 ```
 4. Delete AJ resource pack if no other assets needed
    - AJ generated player assets are not needed since Stable Player Display is being used instead
