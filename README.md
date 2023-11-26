@@ -8,7 +8,7 @@ models + shaders to display player models using new item_display entites.
 ## caveats
 - use on item_display only
 - limited support for translucent skins (will dither instead)
-- do not modify Rotation[1]
+- do not modify Rotation[1] nbt (pitch)
 - model can not be loaded >512 meters **vertical distance** from player (unlimited horizontal range)
 - if using transformation.transtation[1] for animations, subtract required y offset
 
@@ -68,7 +68,7 @@ models + shaders to display player models using new item_display entites.
 ## compatibility with Animated Java
 **Last tested with AJ 0.4.2**. Since this resource pack operates purely on a y offset, converting existing Animated Java animations to use Stable Player Display is rather simple. Just add a corresponding y offset to each transformation. See contents of `animated-java-resources`.
 
-**Warning! AJ supports Rotation[1] but Stable Player Display does not! Do not summon AJ rigs with Rotation[1]! Use a command block to be safe!**
+**Warning! AJ supports Rotation[1] nbt (pitch) but Stable Player Display does not! Do not summon AJ rigs with Rotation[1]! Use a command block to be safe!**
 
 1. Create player animation using rig similar to `player_anim.ajmodel` 
    - **bone dimension and name should not be changed!**
