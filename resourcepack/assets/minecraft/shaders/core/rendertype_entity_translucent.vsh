@@ -34,6 +34,8 @@ out float part;
 
 #define SPACING 1024.0
 #define MAXRANGE (0.5 * SPACING)
+#define SKINRES 64
+#define FACERES 8
 
 const vec4[] subuvs = vec4[](
     vec4(4.0,  0.0,  8.0,  4.0 ), // 4x4x12
@@ -69,6 +71,8 @@ const vec2[] origins = vec2[](
     vec2(0.0,  48.0)
 );
 
+const int[] faceremap = int[](0, 0, 1, 1, 2, 3, 4, 5);
+
 void main() {
     vertexColor = minecraft_mix_light(Light0_Direction, Light1_Direction, normalize(Normal), Color);
     lightMapColor = texelFetch(Sampler2, UV2 / 16, 0);
@@ -100,8 +104,18 @@ void main() {
             vec4 samp2 = texture(Sampler0, vec2(55.0 / 64.0, 20.0 / 64.0));
             bool slim = samp1.a == 0.0 || (((samp1.r + samp1.g + samp1.b) == 0.0) && ((samp2.r + samp2.g + samp2.b) == 0.0) && samp1.a == 1.0 && samp2.a == 1.0);
             int outerLayer = (gl_VertexID / 24) % 2; 
-            int faceId = (gl_VertexID % 24) / 4;
             int vertexId = gl_VertexID % 4;
+            int faceId = (gl_VertexID % 24) / 4;
+            ivec2 faceIdTmp = ivec2(round(UV0 * SKINRES));
+            if ((faceId != 1 && vertexId >= 2) || (faceId == 1 && vertexId <= 1)) {
+                faceIdTmp.y -= FACERES;
+            }
+            if (vertexId == 0 || vertexId == 3) {
+                faceIdTmp.x -= FACERES;
+            }
+            faceIdTmp /= FACERES;
+            faceId = (faceIdTmp.x % 4) + 4 * faceIdTmp.y;
+            faceId = faceremap[faceId];
             int subuvIndex = faceId;
 
             wpos.y += SPACING * partId;
@@ -151,8 +165,8 @@ void main() {
 
             UVout += offset;
             UVout2 += offset;
-            UVout /= 64.0;
-            UVout2 /= 64.0;
+            UVout /= float(SKINRES);
+            UVout2 /= float(SKINRES);
         }
 
         vertexDistance = fog_distance(ModelViewMat, wpos, FogShape);
