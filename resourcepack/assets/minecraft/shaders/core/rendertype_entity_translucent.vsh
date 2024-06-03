@@ -2,6 +2,7 @@
 
 #moj_import <light.glsl>
 #moj_import <fog.glsl>
+#moj_import <stable_player_fix.glsl>
 
 in vec3 Position;
 in vec4 Color;
@@ -85,7 +86,7 @@ void main() {
         part = 0.0;
         texCoord0 = UV0;
         texCoord1 = vec2(0.0);
-        vertexDistance = fog_distance(ModelViewMat, IViewRotMat * Position, FogShape);
+        vertexDistance = fog_distance_two(ModelViewMat, IViewRotMat * Position, FogShape);
         gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
     }
     else {
@@ -169,7 +170,7 @@ void main() {
             UVout2 /= float(SKINRES);
         }
 
-        vertexDistance = fog_distance(ModelViewMat, wpos, FogShape);
+        vertexDistance = fog_distance_two(ModelViewMat, wpos, FogShape);
         texCoord0 = UVout;
         texCoord1 = UVout2;
     }
