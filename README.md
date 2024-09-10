@@ -1,95 +1,52 @@
 # Stable Player Display
-models + shaders to display player models using new item_display entites. 
 
-**This shader is stable on death, relog, unload, placed skulls, etc. The shader is not spawn order dependent.**
+This repository contains models and shaders to display any player skin using only a resource pack and display entities.
 
-<img src="images/1.png" /> 
+**The original repository is [here](https://github.com/bradleyq/stable_player_display/tree/main). This fork is intended to update the original work as long as I'm capable of doing so, and to provide better compatibility with [Animated Java](https://animated-java.dev/).**
 
-## caveats
-- use on item_display only
-- limited support for translucent skins (will dither instead)
-- do not modify Rotation[1] nbt (pitch)
-- model can not be loaded >512 meters **vertical distance** from player (unlimited horizontal range)
-- if using transformation.transtation[1] for animations, subtract required y offset
+## Limitations
 
-## usage
+- Use only with `item_display`.
+- Do not modify `Rotation[1]` NBT (pitch).
+- The model cannot be loaded from more than 512 meters **vertical distance** from the player (unlimited horizontal range).
+- If using `transformation.translation[1]` for animations, subtract the required y-offset (if you are using AJ, the script handles this).
+
+## Raw Item Displays
+
+If you want to summon item displays, use the following commands (it is recommended to use a function):
 
 ```
-/summon minecraft:item_display ~ ~1.4 ~ {Tags:["head"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,0.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-/summon minecraft:item_display ~ ~1.4 ~ {Tags:["arm_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-1024.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-/summon minecraft:item_display ~ ~1.4 ~ {Tags:["arm_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-2048.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-/summon minecraft:item_display ~ ~1.4 ~ {Tags:["torso"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-3072.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-/summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-4096.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-/summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-5120.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-/item replace entity @e[tag=head] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:1}
-/item replace entity @e[tag=arm_r] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:2}
-/item replace entity @e[tag=arm_l] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:3}
-/item replace entity @e[tag=torso] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:4}
-/item replace entity @e[tag=leg_r] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:5}
-/item replace entity @e[tag=leg_l] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:6}
+summon minecraft:item_display ~ ~1.4 ~ {Tags:["head"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,0.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~ ~1.4 ~ {Tags:["arm_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-1024.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~ ~1.4 ~ {Tags:["arm_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-2048.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~ ~1.4 ~ {Tags:["torso"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-3072.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-4096.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-5120.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
 ```
 
-- `view_range:0.6f` guarantees the player model will be unloaded within 512 blocks vertically
-- `translation:` skin is loaded based on y offset:
+## Steps to Use
 
-  0 = head
-
-  -1024 = right arm
-  
-  -2048 = left arm
-  
-  -3072 = torso
-  
-  -4096 = right leg
-  
-  -5120 = left leg
-  
-- `~ ~1.4 ~ ` when standing, head arms and torso pivot from here
-- `~ ~0.7 ~`  when standing, legs pivot from here
-- `SkullOwner:` player skin to load
-- `CustomModelData:` each body part has its own custom model:
-
-  1 = head
-  
-  2 = right arm
-  
-  3 = left arm
-  
-  4 = torso
-  
-  5 = right leg
-  
-  6 = left leg
-
-  7 = slim right arm
-
-  8 = slim left arm
-
-## compatibility with Animated Java
-**Last tested with AJ 0.4.2**. Since this resource pack operates purely on a y offset, converting existing Animated Java animations to use Stable Player Display is rather simple. Just add a corresponding y offset to each transformation. See contents of `animated-java-resources`.
-
-**Warning! AJ supports Rotation[1] nbt (pitch) but Stable Player Display does not! Do not summon AJ rigs with Rotation[1]! Use a command block to be safe!**
-
-1. Create player animation using rig similar to `player_anim.ajmodel` 
-   - **bone dimension and name should not be changed!**
-   -  Pivot should remain consistent! If they are changed in AJ, update them in the Stable Player Display model as well
-   -  Item for player in AJ does not matter, it can be discarded later
-   -  Model generated with AJ 0.4.2
-2. Export animation to a dummy resource pack (**not stable player display**) and datapack
-3. Run `aj-convert.py` in datapack root folder
-   - **only run this script once per AJ export!**
-   - requires `python3`
-   - requires `nbtlib` https://pypi.org/project/nbtlib/
-   - usage: `aj-convert.py [project] [optional:flags]`
+1. Export the player rig from Animated Java (AJ).
+2. Modify the JSON file using the following script. Copy it to the AJ project folder:
+```bash
+python aj-convert.py
 ```
-available flags:
-        -ns=[namespace]         internal project namespace. Default 'zzzzzzzz'
-        -pn=[playerName]        player skin to use. Default '' no skin, must be set later in game
-        -s                      slim model. Default disabled
-```
-4. Delete AJ resource pack if no other assets needed
-   - AJ generated player assets are not needed since Stable Player Display is being used instead
-5. Use the provided loot tables (slim available as well) to update the AJ model in game:
+
+3. Run `aj-convert.py` in the datapack root folder:
+   - **Run this script only once per AJ export!**
+   - Requires `python3`.
+   - Requires `nbtlib`: [https://pypi.org/project/nbtlib/](https://pypi.org/project/nbtlib/).
+   - Usage: `aj-convert.py [project] [optional:flags]`.
+
+Available flags:
+- `-ns=[namespace]` : Internal project namespace. Default is `'zzzzzzzz'`.
+- `-pn=[playerName]` : Player skin to use. Default is `''` (no skin), must be set later in-game.
+- `-s` : Enable slim model. Default is disabled.
+
+4. Delete the AJ resource pack if no other assets are needed (AJ-generated player assets are not required, as Stable Player Display will be used instead).
+5. Summon the rig following the [AJ Documentation](https://animated-java.dev/docs/introduction/what-is-animated-java).
+6. Use the provided loot tables (a slim variant is available) to update the AJ model in-game:
+
 ```
 /loot replace entity @e[tag=aj.player_anim.bone.head] hotbar.0 loot player_anim:player/head
 /loot replace entity @e[tag=aj.player_anim.bone.right_arm] hotbar.0 loot player_anim:player/right_arm
@@ -99,12 +56,29 @@ available flags:
 /loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot player_anim:player/left_leg
 ```
 
-## how it works
+![You can also follow this video where I demonstrate all the steps](resources/2024-08-17_16-40-08.mp4).
 
-This shader makes use of item_displays not culling when the displayed model is out of player view. The translation can be set to a high value `n, 2n, 3n ...` to signal the shader. As long as the player is within `n/2` vertical distance of the item_display, the shader will be able to correctly identify the intended texture UVs to load.
-  
-## credits
+### Variants
 
-**Resonance#3633** - providing custom models and base template
+To use variants, extract the required files from the generated resource pack and merge them with the Stable Player Display resource pack. Ensure that you remove the "default" variant files; otherwise, the model parts will be overwritten.
 
-**https://github.com/sireroo** - mild inspiration
+## Issues You Might Encounter
+
+- **When running the script**: The script includes multiple error checks for possible issues during processing. Please **READ** the messages output by the terminal carefully. I won't provide any help if the error is something like: `FileNotFoundError: [Errno 2] No such file or directory:` or similar. Make sure you are using the script correctly and in the proper directories. (However, if it worked in a previous AJ version but doesn't now, feel free to ask me.)
+
+- **Problems with the resource pack**: The resource pack may break with each new version of Minecraft since shaders are still quite experimental. I'll try to update it to the latest version when possible. Make sure to use this repo with the last-supported Minecraft version, and wait for an update if a new version of Minecraft or Animated Java is released.
+
+- **Editing the pivot points of the model**: If you've tried animating the AJ model, you may have found the pivot points inconvenient to work with and attempted to change them, which may have caused the model to distort. To fix this, you need to manually adjust the `translation` for each model part in `assets\minecraft\models\custom\entities\player`.
+
+Make sure you have all the necessary libraries installed, export the project correctly, use ONLY the resource pack from this repo, test everything twice, and follow the AJ documentation. 
+
+Please note, **I can't provide any help beyond updating the script and the shader**. If you want to add any other functionality, you will need to do it yourself.
+
+If you encounter any errors or a new version breaks some aspect of the resource pack or script, feel free to DM me on Discord: **erkko_68**.
+
+## Credits
+
+- **Resonance#3633**: Providing custom models and base templates.
+- **[sireroo](https://github.com/sireroo)**: Mild inspiration.
+- **[bradleyq](https://github.com/bradleyq/stable_player_display/tree/main)**: Original creator.
+---

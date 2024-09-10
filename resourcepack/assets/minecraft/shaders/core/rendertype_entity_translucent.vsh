@@ -85,7 +85,7 @@ void main() {
         part = 0.0;
         texCoord0 = UV0;
         texCoord1 = vec2(0.0);
-        vertexDistance = fog_distance(ModelViewMat, IViewRotMat * Position, FogShape);
+        vertexDistance = fog_distance(IViewRotMat * Position, FogShape);
         gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
     }
     else {
@@ -169,7 +169,7 @@ void main() {
             UVout2 /= float(SKINRES);
         }
 
-        vertexDistance = fog_distance(ModelViewMat, wpos, FogShape);
+        vertexDistance = fog_distance(wpos, FogShape);
         texCoord0 = UVout;
         texCoord1 = UVout2;
     }
