@@ -24,7 +24,7 @@ summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_r"],item_display:"thirdperson
 summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-5120.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
 ```
 
-## Steps to Use
+## Animated Java
 
 1. Export the player rig from Animated Java (AJ).
 2. Modify the JSON file using the following script. Copy it to the AJ project folder:
