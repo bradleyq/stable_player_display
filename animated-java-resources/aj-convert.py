@@ -49,7 +49,7 @@ def read_and_modify_summon_function(summonPath, project, offsets, playerName):
 
             temp = f.readline()
             
-            if temp[:-4] == ',':
+            if temp[-4] == ',':
                 temp = temp[:-4] + temp[-3:]  # Remove malformed last comma
 
             nbtStart = temp.index("~ ~ ~ ") + len("~ ~ ~ ")
