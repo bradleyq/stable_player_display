@@ -72,7 +72,27 @@ To use variants, extract the required files from the generated resource pack and
 
 Make sure you have all the necessary libraries installed, export the project correctly, use ONLY the resource pack from this repo, test everything twice, and follow the AJ documentation. 
 
+## How to Submit an Issue
+
+### 1. **Specify the Environment**
+   - **Version**: Specify the version of the script and Minecraft you're using.
+
+### 2. **Describe the Problem**
+   - **What You Tried to Do**: Clearly explain what you were trying to accomplish.
+   - **What Happened**: Describe the unexpected behavior or error.
+   - **Expected Outcome**: Mention what you expected to happen instead.
+   - **Steps to Reproduce**: List the exact steps to reproduce the issue. This helps me replicate the problem on my side.
+
+### 3. **Include Logs and Screenshots**
+   - **Logs**: Provide any relevant error logs or output (use code blocks for clarity).
+   - **Screenshots**: Attach screenshots or screen recordings that show the issue.
+
+### 4. **Additional Context**
+   - **Other Information**: Add any other information you think might be helpful, such as related issues, workarounds you've tried, or relevant libraries.
+
 Please note, **I can't provide any help beyond updating the script and the shader**. If you want to add any other functionality, you will need to do it yourself.
+
+---
 
 If you encounter any errors or a new version breaks some aspect of the resource pack or script, feel free to DM me on Discord: **erkko_68**.
 
