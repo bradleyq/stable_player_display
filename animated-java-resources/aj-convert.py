@@ -1,18 +1,19 @@
 import sys
 import nbtlib
 import os
+import re
 
 # Constants for offsets and components
 HEAD, RARM, LARM, TORSO, RLEG, LLEG = "head", "right_arm", "left_arm", "torso", "right_leg", "left_leg"
 
 OFFSETS = (
-    (HEAD, 0.0, 1), (RARM, -1024.0, 2), (LARM, -2048.0, 3),
-    (TORSO, -3072.0, 4), (RLEG, -4096.0, 5), (LLEG, -5120.0, 6)
+    (HEAD, 0.0), (RARM, -1024.0), (LARM, -2048.0),
+    (TORSO, -3072.0), (RLEG, -4096.0), (LLEG, -5120.0)
 )
 
 OFFSETS_S = (
-    (HEAD, 0.0, 1), (RARM, -1024.0, 7), (LARM, -2048.0, 8),
-    (TORSO, -3072.0, 4), (RLEG, -4096.0, 5), (LLEG, -5120.0, 6)
+    (HEAD, 0.0), (RARM, -1024.0), (LARM, -2048.0),
+    (TORSO, -3072.0), (RLEG, -4096.0), (LLEG, -5120.0)
 )
 
 def parse_arguments():
@@ -22,7 +23,6 @@ def parse_arguments():
         print("Usage: aj-convert.py [project] [optional:flags]")
         print("Available flags:")
         print("\t-pn=[playerName]\tPlayer skin to use. Default '' (no skin), must be set later in game")
-        print("\t-s\t\t\tEnable slim model. Default is disabled")
         sys.exit(1)
     
     project = sys.argv[1]
@@ -33,8 +33,6 @@ def parse_arguments():
         for arg in sys.argv[2:]:
             if arg.startswith("-pn="):
                 playerName = arg[4:]
-            elif arg == "-s":
-                offsets = OFFSETS_S
 
     return project, playerName, offsets
 
@@ -78,7 +76,7 @@ def modify_nbt_passengers(nbtRoot, project, offsets, playerName):
             tag = f"aj.{project}.bone.{offsetPair[0]}"
             if tag in passenger["Tags"]:
                 passenger["transformation"]["translation"][1] += offsetPair[1]
-                passenger["item"]["components"]["minecraft:custom_model_data"] = nbtlib.tag.Int(offsetPair[2])
+                passenger["item"]["components"]["minecraft:item_model"] = nbtlib.tag.String("player_display:player/" + offsetPair[0])
                 passenger["item_display"] = nbtlib.tag.String("thirdperson_righthand")
                 
                 if playerName:
@@ -87,7 +85,7 @@ def modify_nbt_passengers(nbtRoot, project, offsets, playerName):
                 else:
                     passenger["item"]["id"] = nbtlib.tag.String("minecraft:air")
 
-def process_mcfunction_files(paths, project, offsets):
+def process_pose_files(paths, project, offsets):
     """Process set_default_pose.mcfunction and apply_default_pose.mcfunction files."""
     for path in paths:
         try:
@@ -175,46 +173,89 @@ def modify_frame_line(line, offsets):
 def process_default_variant_mcfunction(project, offsets):
     """Process the apply.mcfunction file and update corresponding zzz files."""
     print("Updating default variant")
-    apply_mcfunction_path = os.path.join(".", "data", "animated_java", "function", project, "variants", "default", "apply.mcfunction")
     zzz_folder_path = os.path.join(".", "data", "animated_java", "function", project, "variants", "default", "zzz")
 
-    with open(apply_mcfunction_path, 'r') as file:
-        lines = file.readlines()
+    # Loop through each .mcfunction file in the zzz folder
+    for file in os.listdir(zzz_folder_path):
+        file_path = os.path.join(zzz_folder_path, file)
+        
+        # Read all lines
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+        
+        # Write the modified lines back to the file
+        with open(file_path, 'w') as file:
+            file.writelines(modify_variant_line(lines[1])) # Update the second line
 
-    for line in lines:
-        # Process the line to extract the bone and the corresponding zzz file number
-        if "tag=aj."+ project +".bone." in line and "zzz/" in line:
-            parts = line.split()
+def modify_variant_line(line):
+    # Extract the last part after the last "/" using regex
+    match = re.search(r'([^/]+)"$', line)
+    if match:
+        last_name = match.group(1)  # Get the last part after the last "/"
+        # Modify the line with the new format
+        return f'data modify entity @s item.components.minecraft:item_model set value "player_display:player/{last_name}"\n'
+    return line
 
-            bone = ""
-            zzz_file_number = ""
+def generate_slim_variant(project):
+    """Copy the 'default' folder to 'slim', update 'apply.mcfunction' references, and modify zzz files."""
+    
+    # Define paths for 'default' and 'slim'
+    base_path = os.path.join(".", "data", "animated_java", "function", project, "variants")
+    default_folder_path = os.path.join(base_path, "default")
+    slim_folder_path = os.path.join(base_path, "slim")
+    
+    # Copy 'default' folder to 'slim'
+    os.makedirs(slim_folder_path, exist_ok=True)
+    
+    # Copy all files and subdirectories from 'default' to 'slim'
+    for root, dirs, files in os.walk(default_folder_path):
+        relative_path = os.path.relpath(root, default_folder_path)
+        target_dir = os.path.join(slim_folder_path, relative_path)
+        os.makedirs(target_dir, exist_ok=True)
+        
+        for file in files:
+            src_file = os.path.join(root, file)
+            dest_file = os.path.join(target_dir, file)
+            with open(src_file, 'rb') as f_src, open(dest_file, 'wb') as f_dest:
+                f_dest.write(f_src.read())
+    
+    # Modify 'apply.mcfunction' file in the 'slim' folder
+    apply_file_path = os.path.join(slim_folder_path, "apply.mcfunction")
+    
+    if os.path.isfile(apply_file_path):
+        with open(apply_file_path, 'r') as file:
+            content = file.read()
+        
+        # Replace "default" with "slim" in the content
+        modified_content = content.replace("default/zzz","slim/zzz")
+        
+        # Write the modified content back to the file
+        with open(apply_file_path, 'w') as file:
+            file.write(modified_content)
 
-            for part in parts:
-                if part.startswith("@s[tag=aj." + project + ".bone."):
-                    bone = part.split(".")[-1].replace("]", "")
-                elif "zzz/" in part:
-                    zzz_file_number = part.split("/")[-1]
-
-            if bone and zzz_file_number:
-                # Find the correct offset for the bone
-                for offset in offsets:
-                    if offset[0] == bone:
-                        custom_model_data_value = offset[2]
-                        zzz_file_path = os.path.join(zzz_folder_path, zzz_file_number + ".mcfunction")
-                        print(f"Updating bone {bone} in {zzz_file_number}.mcfunction with custom_model_data {custom_model_data_value}")
-                        update_custom_model_data(zzz_file_path, custom_model_data_value)
-                        break
-
-def update_custom_model_data(filepath, custom_model_data_value):
-    """Update the custom_model_data value in the specified file."""
-    with open(filepath, 'r') as file:
-        line = file.readline() # Skip first line
-        line = file.readline()
-
-    with open(filepath, 'w') as file:
-        # Replace the old value with the new custom_model_data_value
-        line = f"data modify entity @s item.components.minecraft:custom_model_data set value {custom_model_data_value}\n"
-        file.write(line)
+    # Modify files in 'zzz' folder in 'slim'
+    zzz_folder_path = os.path.join(slim_folder_path, "zzz")
+    
+    for filename in os.listdir(zzz_folder_path):
+        if filename.endswith(".mcfunction"):
+            file_path = os.path.join(zzz_folder_path, filename)
+            
+            # Read the file and check the last line
+            with open(file_path, 'r') as file:
+                lines = file.readlines()
+            
+            if lines:
+                # Check if the last line contains "right_arm" or "left_arm"
+                if lines[-1].strip().endswith('right_arm"'):
+                    lines[-1] = re.sub(r'right_arm"', 'slim_right"', lines[-1])
+                elif lines[-1].strip().endswith('left_arm"'):
+                    lines[-1] = re.sub(r'left_arm"', 'slim_left"', lines[-1])
+            
+            # Write the modified lines back to the file
+            with open(file_path, 'w') as file:
+                file.writelines(lines)
+    
+    print("Generated Slim variant")
 
 def main():
     project, playerName, offsets = parse_arguments()
@@ -228,12 +269,14 @@ def main():
         os.path.join(".", "data", "animated_java", "function", project, "set_default_pose.mcfunction"),
         os.path.join(".", "data", "animated_java", "function", project, "apply_default_pose.mcfunction")
     ]
-    process_mcfunction_files(mcfunction_paths, project, offsets)
+    process_pose_files(mcfunction_paths, project, offsets)
 
     animations_rootpath = os.path.join(".", "data", "animated_java", "function", project, "animations")
     modify_animation_frames(animations_rootpath, project, offsets)
 
     process_default_variant_mcfunction(project,offsets)
+
+    generate_slim_variant(project)
 
 if __name__ == "__main__":
     main()

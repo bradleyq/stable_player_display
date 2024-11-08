@@ -8,12 +8,14 @@
           "name": "minecraft:player_head",
           "functions": [
             {
-              "function": "minecraft:fill_player_head",
-              "entity": "this"
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:item_model": "player_display:player/left_arm"
+              }
             },
             {
-              "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData:3}"
+              "function": "minecraft:fill_player_head",
+              "entity": "this"
             }
           ]
         }

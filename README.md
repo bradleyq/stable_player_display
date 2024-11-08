@@ -41,7 +41,6 @@ python aj-convert.py
 Available flags:
 - `-ns=[namespace]` : Internal project namespace. Default is `'zzzzzzzz'`.
 - `-pn=[playerName]` : Player skin to use. Default is `''` (no skin), must be set later in-game.
-- `-s` : Enable slim model. Default is disabled.
 
 4. Delete the AJ resource pack if no other assets are needed (AJ-generated player assets are not required, as Stable Player Display will be used instead).
 5. Summon the rig following the [AJ Documentation](https://animated-java.dev/docs/introduction/what-is-animated-java).
@@ -60,7 +59,9 @@ Available flags:
 
 ### Variants
 
-To use variants, extract the required files from the generated resource pack and merge them with the Stable Player Display resource pack. Ensure that you remove the "default" variant files; otherwise, the model parts will be overwritten.
+A slim variant is generated when running the Animated Java Python script, and can be summoned just like any other variant.
+
+Custom variants are not automatically processed by the script. If you want to add one, refer to how the "default" and "slim" variants are generated within the datapack. You'll need to modify the `apply.mcfunction` file to reference the appropriate `/zzz/*.mcfunction` files, which are responsible for updating the item model paths. Then, for each `/zzz/*.mcfunction` file, update the references to the desired item model for each body part.
 
 ## Issues You Might Encounter
 
