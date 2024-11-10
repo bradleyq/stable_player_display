@@ -36,10 +36,9 @@ python aj-convert.py
    - **Run this script only once per AJ export!**
    - Requires `python3`.
    - Requires `nbtlib`: [https://pypi.org/project/nbtlib/](https://pypi.org/project/nbtlib/).
-   - Usage: `aj-convert.py [project] [optional:flags]`.
+   - Usage: `aj-convert.py [aj project name] [optional:flags]`.
 
 Available flags:
-- `-ns=[namespace]` : Internal project namespace. Default is `'zzzzzzzz'`.
 - `-pn=[playerName]` : Player skin to use. Default is `''` (no skin), must be set later in-game.
 
 4. Delete the AJ resource pack if no other assets are needed (AJ-generated player assets are not required, as Stable Player Display will be used instead).
@@ -47,15 +46,13 @@ Available flags:
 6. Use the provided loot tables (a slim variant is available) to update the AJ model in-game:
 
 ```
-/loot replace entity @e[tag=aj.player_anim.bone.head] hotbar.0 loot player_anim:player/head
-/loot replace entity @e[tag=aj.player_anim.bone.right_arm] hotbar.0 loot player_anim:player/right_arm
-/loot replace entity @e[tag=aj.player_anim.bone.left_arm] hotbar.0 loot player_anim:player/left_arm
-/loot replace entity @e[tag=aj.player_anim.bone.torso] hotbar.0 loot player_anim:player/torso
-/loot replace entity @e[tag=aj.player_anim.bone.right_leg] hotbar.0 loot player_anim:player/right_leg
-/loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot player_anim:player/left_leg
+loot replace entity @e[tag=aj.player_anim.bone.head] hotbar.0 loot minecraft:player/head
+loot replace entity @e[tag=aj.player_anim.bone.right_arm] hotbar.0 loot minecraft:player/right_arm
+loot replace entity @e[tag=aj.player_anim.bone.left_arm] hotbar.0 loot minecraft:player/left_arm
+loot replace entity @e[tag=aj.player_anim.bone.torso] hotbar.0 loot minecraft:player/torso
+loot replace entity @e[tag=aj.player_anim.bone.right_leg] hotbar.0 loot minecraft:player/right_leg
+loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot minecraft:player/left_leg
 ```
-
-![You can also follow this video where I demonstrate all the steps](resources/2024-08-17_16-40-08.mp4).
 
 ### Variants
 

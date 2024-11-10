@@ -1,9 +1,9 @@
 {
 	"meta": {
 		"format": "animated_java_blueprint",
-		"format_version": "1.4.0",
+		"format_version": "1.5.1",
 		"uuid": "0d6b415d-253f-7b92-717e-ff2cb1b1d9c0",
-		"save_location": "C:\\Users\\ericb\\Desktop\\stable_player_display\\stable_player_display\\animated-java-resources\\player_anim.ajblueprint",
+		"save_location": "",
 		"last_used_export_namespace": "player_anim"
 	},
 	"blueprint_settings": {
