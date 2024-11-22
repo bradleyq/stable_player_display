@@ -7,7 +7,7 @@ This repository contains models and shaders to display any player skin using onl
 ## Limitations
 
 - Use only with `item_display`.
-- Do not modify `Rotation[1]` NBT (pitch).
+- **Do NOT modify the Rotation[1]** NBT (pitch) of any bone in the model.
 - The model cannot be loaded from more than 512 meters **vertical distance** from the player (unlimited horizontal range).
 - If using `transformation.translation[1]` for animations, subtract the required y-offset (if you are using AJ, the script handles this).
 
@@ -42,7 +42,10 @@ Available flags:
 - `-pn=[playerName]` : Player skin to use. Default is `''` (no skin), must be set later in-game.
 
 4. Delete the AJ resource pack if no other assets are needed (AJ-generated player assets are not required, as Stable Player Display will be used instead).
+   1. **Do NOT export the AJ project directly into the default RP; use the default RP without modifications.**
 5. Summon the rig following the [AJ Documentation](https://animated-java.dev/docs/introduction/what-is-animated-java).
+   1. **Make sure to use ```execute rotated ~ 0``` when summoning the rig. And NEVER modify the Rotation[1] of the model.**
+   2. Example summon command: ```execute rotated ~ 0 run function animated_java:[project_name]/summon/default```
 6. Use the provided loot tables (a slim variant is available) to update the AJ model in-game:
 
 ```
@@ -66,7 +69,7 @@ Custom variants are not automatically processed by the script. If you want to ad
 
 - **Problems with the resource pack**: The resource pack may break with each new version of Minecraft since shaders are still quite experimental. I'll try to update it to the latest version when possible. Make sure to use this repo with the last-supported Minecraft version, and wait for an update if a new version of Minecraft or Animated Java is released.
 
-- **Editing the pivot points of the model**: If you've tried animating the AJ model, you may have found the pivot points inconvenient to work with and attempted to change them, which may have caused the model to distort. To fix this, you need to manually adjust the `translation` for each model part in `assets\minecraft\models\custom\entities\player`.
+- **Editing the pivot points of the model**: If you've tried animating the AJ model, you may have found the pivot points inconvenient to work with and attempted to change them, which may have caused the model to distort. To fix this, you need to manually adjust the `translation` for each model part in `assets\player_display\models\item\player`.
 
 Make sure you have all the necessary libraries installed, export the project correctly, use ONLY the resource pack from this repo, test everything twice, and follow the AJ documentation. 
 
