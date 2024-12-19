@@ -26,6 +26,7 @@ summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson
 
 ## Animated Java
 
+### Using default mode
 1. Export the player rig from Animated Java (AJ).
 2. Modify the exported datapack using the following script. Copy it to the AJ project folder:
 ```bash
@@ -56,6 +57,23 @@ loot replace entity @e[tag=aj.player_anim.bone.torso] hotbar.0 loot minecraft:pl
 loot replace entity @e[tag=aj.player_anim.bone.right_leg] hotbar.0 loot minecraft:player/right_leg
 loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot minecraft:player/left_leg
 ```
+### Using plugin mode
+1. Export the player rig from Animated Java with plugin mode enabled
+2. When you parsed blueprint, you should change Y translation of rig bones. 
+   1. Get current Y translation and subtract from that bone-related offset. (E. g. `headTranslation.y -= headOffset`)
+3. Display mode of ItemDisplay must be set to THIRDPERSON_RIGHTHAND.
+4. Don't forget to set item_model to appropriate value.
+
+Offsets
+```
+head         0
+right_arm   1024
+left_arm    2048
+torso       3072
+right_leg   4096
+left_leg    5120
+```
+
 
 ### Variants
 
