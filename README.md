@@ -59,7 +59,7 @@ loot replace entity @e[tag=aj.player_anim.bone.torso] hotbar.0 loot minecraft:pl
 loot replace entity @e[tag=aj.player_anim.bone.right_leg] hotbar.0 loot minecraft:player/right_leg
 loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot minecraft:player/left_leg
 ```
-## Animated Java: Plugin mode (TODO: Add plugin mode into the script)
+### Animated Java: Plugin mode (TODO: Add plugin mode into the script)
 1. Export the player rig from Animated Java with plugin mode enabled
 2. When you parsed blueprint, you should change Y translation of rig bones. 
    1. Get current Y translation and subtract from that bone-related offset. (E. g. `headTranslation.y -= headOffset`)
