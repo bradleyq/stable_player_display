@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "player_display:item/player/lower_right_leg",
+    "model": {
+      "type": "minecraft:head",
+      "kind": "player"
+    }
+  }
+}

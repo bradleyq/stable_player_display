@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "player_display:item/player/slim_left",
+    "model": {
+      "type": "minecraft:head",
+      "kind": "player"
+    }
+  }
+}

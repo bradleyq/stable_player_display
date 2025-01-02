@@ -3,17 +3,14 @@ import nbtlib
 import os
 import re
 
-# Constants for offsets and components
-HEAD, RARM, LARM, TORSO, RLEG, LLEG = "head", "right_arm", "left_arm", "torso", "right_leg", "left_leg"
-
 OFFSETS = (
-    (HEAD, 0.0), (RARM, -1024.0), (LARM, -2048.0),
-    (TORSO, -3072.0), (RLEG, -4096.0), (LLEG, -5120.0)
+    ("head", 0.0), ("right_arm", -1024.0), ("left_arm", -2048.0),
+    ("torso", -3072.0), ("right_leg", -4096.0), ("left_leg", -5120.0)
 )
 
-OFFSETS_S = (
-    (HEAD, 0.0), (RARM, -1024.0), (LARM, -2048.0),
-    (TORSO, -3072.0), (RLEG, -4096.0), (LLEG, -5120.0)
+SPLIT_OFFSETS = (
+    ("head", 0.0),("right_arm", -1024.0), ("right_forearm", -6144.0), ("left_arm", -2048.0), ("left_forearm", -7168.0),
+    ("torso", -3072.0), ("waist", -8192.0), ("right_leg", -4096.0), ("lower_right_leg", -9216.0) ,("left_leg", -5120.0), ("lower_left_leg", -10240.0)
 )
 
 def parse_arguments():
@@ -23,6 +20,7 @@ def parse_arguments():
         print("Usage: aj-convert.py [project] [optional:flags]")
         print("Available flags:")
         print("\t-pn=[playerName]\tPlayer skin to use. Default '' (no skin), must be set later in game")
+        print("\t-split\tEnables split mode where the player model has extra joints (player_split.ajblueprint)")
         sys.exit(1)
     
     project = sys.argv[1]
@@ -33,6 +31,8 @@ def parse_arguments():
         for arg in sys.argv[2:]:
             if arg.startswith("-pn="):
                 playerName = arg[4:]
+            if arg.startswith("-split"):
+                offsets = SPLIT_OFFSETS
 
     return project, playerName, offsets
 
@@ -76,7 +76,7 @@ def modify_nbt_passengers(nbtRoot, project, offsets, playerName):
             tag = f"aj.{project}.bone.{offsetPair[0]}"
             if tag in passenger["Tags"]:
                 passenger["transformation"]["translation"][1] += offsetPair[1]
-                passenger["item"]["components"]["minecraft:item_model"] = nbtlib.tag.String("player_display:player/" + offsetPair[0])
+                passenger["item"]["components"]["minecraft:item_model"] = nbtlib.tag.String(f"player_display:player/" + offsetPair[0])
                 passenger["item_display"] = nbtlib.tag.String("thirdperson_righthand")
                 
                 if playerName:
@@ -162,7 +162,9 @@ def modify_frame_file(framepath, offsets):
 def modify_frame_line(line, offsets):
     """Modify a line in a frame file with the appropriate offsets."""
     for offsetPair in offsets:
-        if offsetPair[0] in line and f"{offsetPair[0]}_down" not in line:
+        # Construct the exact pattern to match
+        target = f"$data merge entity $(bone_{offsetPair[0]})"
+        if target in line:
             nbtStart = line.index(") ") + len(") ")
             tmpLine = line[:nbtStart]
             nbtRoot = nbtlib.parse_nbt(line[nbtStart:])
@@ -185,9 +187,9 @@ def process_default_variant_mcfunction(project, offsets):
         
         # Write the modified lines back to the file
         with open(file_path, 'w') as file:
-            file.writelines(modify_variant_line(lines[1])) # Update the second line
+            file.writelines(modify_variant_line(lines[1],project)) # Update the second line
 
-def modify_variant_line(line):
+def modify_variant_line(line,project):
     # Extract the last part after the last "/" using regex
     match = re.search(r'([^/]+)"$', line)
     if match:
@@ -245,11 +247,15 @@ def generate_slim_variant(project):
                 lines = file.readlines()
             
             if lines:
-                # Check if the last line contains "right_arm" or "left_arm"
+                # Check if the last line contains keys
                 if lines[-1].strip().endswith('right_arm"'):
                     lines[-1] = re.sub(r'right_arm"', 'slim_right"', lines[-1])
                 elif lines[-1].strip().endswith('left_arm"'):
                     lines[-1] = re.sub(r'left_arm"', 'slim_left"', lines[-1])
+                elif lines[-1].strip().endswith('right_forearm"'):
+                    lines[-1] = re.sub(r'right_forearm"', 'forearm_slim_right"', lines[-1])
+                elif lines[-1].strip().endswith('left_forearm"'):
+                    lines[-1] = re.sub(r'left_forearm"', 'forearm_slim_left"', lines[-1])
             
             # Write the modified lines back to the file
             with open(file_path, 'w') as file:

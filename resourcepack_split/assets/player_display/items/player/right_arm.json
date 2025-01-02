@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "player_display:item/player/right_arm",
+    "model": {
+      "type": "minecraft:head",
+      "kind": "player"
+    }
+  }
+}

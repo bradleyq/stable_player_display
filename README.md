@@ -11,7 +11,9 @@ This repository contains models and shaders to display any player skin using onl
 - The model cannot be loaded from more than 512 meters **vertical distance** from the player (unlimited horizontal range).
 - If using `transformation.translation[1]` for animations, subtract the required y-offset (if you are using AJ, the script handles this).
 
-## Raw Item Displays
+## Use Modes
+
+### Raw Item Displays
 
 If you want to summon item displays, use the following commands (it is recommended to use a function):
 
@@ -24,10 +26,9 @@ summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_r"],item_display:"thirdperson
 summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-5120.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
 ```
 
-## Animated Java
+### Animated Java: Datapack
 
-### Using default mode
-1. Export the player rig from Animated Java (AJ).
+1. Export the player rig from Animated Java (AJ). **"Use Storage for Animations" not supported**
 2. Modify the exported datapack using the following script. Copy it to the AJ project folder:
 ```bash
 python aj-convert.py
@@ -41,6 +42,7 @@ python aj-convert.py
 
 Available flags:
 - `-pn=[playerName]` : Player skin to use. Default is `''` (no skin), must be set later in-game.
+- `-split` : Player model with extra joints. (Needs to be exported using [player_split.ajblueprint](animated-java-resources/player_split.ajblueprint))
 
 4. Delete the AJ resource pack if no other assets are needed (AJ-generated player assets are not required, as Stable Player Display will be used instead).
    1. **Do NOT export the AJ project directly into the default RP; use the default RP without modifications.**
@@ -57,7 +59,7 @@ loot replace entity @e[tag=aj.player_anim.bone.torso] hotbar.0 loot minecraft:pl
 loot replace entity @e[tag=aj.player_anim.bone.right_leg] hotbar.0 loot minecraft:player/right_leg
 loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot minecraft:player/left_leg
 ```
-### Using plugin mode
+## Animated Java: Plugin mode (TODO: Add plugin mode into the script)
 1. Export the player rig from Animated Java with plugin mode enabled
 2. When you parsed blueprint, you should change Y translation of rig bones. 
    1. Get current Y translation and subtract from that bone-related offset. (E. g. `headTranslation.y -= headOffset`)
@@ -74,8 +76,13 @@ right_leg   4096
 left_leg    5120
 ```
 
+## Split Model
+The same mode as Animated Java: Datapack but the model has extra joints. Don't forget to use the flag `-split`.
+![Split Mode](assets/player_anim.gif)
 
-### Variants
+---
+
+## Variants
 
 A slim variant is generated when running the Animated Java Python script, and can be summoned just like any other variant.
 
@@ -87,7 +94,7 @@ Custom variants are not automatically processed by the script. If you want to ad
 
 - **Problems with the resource pack**: The resource pack may break with each new version of Minecraft since shaders are still quite experimental. I'll try to update it to the latest version when possible. Make sure to use this repo with the last-supported Minecraft version, and wait for an update if a new version of Minecraft or Animated Java is released.
 
-- **Editing the pivot points of the model**: If you've tried animating the AJ model, you may have found the pivot points inconvenient to work with and attempted to change them, which may have caused the model to distort. To fix this, you need to manually adjust the `translation` for each model part in `assets\player_display\models\item\player`.
+- **Editing the pivot points of the model**: If you've tried animating the AJ model, you may have found the pivot points inconvenient to work with and attempted to change them, which may have caused the model to distort. To fix this, you need to manually adjust the `translation` for each model part in `resourcepack\assets\player_display\models\item\player`.
 
 Make sure you have all the necessary libraries installed, export the project correctly, use ONLY the resource pack from this repo, test everything twice, and follow the AJ documentation. 
 

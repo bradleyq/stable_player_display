@@ -1,9 +1,9 @@
 {
 	"meta": {
 		"format": "animated_java_blueprint",
-		"format_version": "1.5.1",
+		"format_version": "1.5.2",
 		"uuid": "0d6b415d-253f-7b92-717e-ff2cb1b1d9c0",
-		"save_location": "",
+		"save_location": "C:\\Users\\ericb\\Desktop\\stable_player_display\\stable_player_display\\animated-java-resources\\player.ajblueprint",
 		"last_used_export_namespace": "player_anim"
 	},
 	"blueprint_settings": {
@@ -14,6 +14,7 @@
 		"enable_plugin_mode": false,
 		"resource_pack_export_mode": "raw",
 		"data_pack_export_mode": "raw",
+		"target_minecraft_version": "1.21.2",
 		"display_item": "minecraft:player_head",
 		"custom_model_data_offset": 0,
 		"enable_advanced_resource_pack_settings": false,
@@ -29,6 +30,8 @@
 		"interpolation_duration": 1,
 		"teleportation_duration": 1,
 		"use_storage_for_animation": false,
+		"show_function_errors": true,
+		"show_outdated_warning": true,
 		"baked_animations": true,
 		"json_file": ""
 	},
@@ -42,6 +45,7 @@
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
+			"light_emission": 0,
 			"render_order": "default",
 			"allow_mirror_modeling": true,
 			"from": [-4, 12, -2],
@@ -81,6 +85,7 @@
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
+			"light_emission": 0,
 			"render_order": "default",
 			"allow_mirror_modeling": true,
 			"from": [-8, 12, -2],
@@ -122,6 +127,7 @@
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
+			"light_emission": 0,
 			"render_order": "default",
 			"allow_mirror_modeling": true,
 			"from": [4, 12, -2],
@@ -163,6 +169,7 @@
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
+			"light_emission": 0,
 			"render_order": "default",
 			"allow_mirror_modeling": true,
 			"from": [-4, 24, -4],
@@ -204,6 +211,7 @@
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
+			"light_emission": 0,
 			"render_order": "default",
 			"allow_mirror_modeling": true,
 			"from": [0, 1, -2],
@@ -245,6 +253,7 @@
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
+			"light_emission": 0,
 			"render_order": "default",
 			"allow_mirror_modeling": true,
 			"from": [-4, 1, -2],
@@ -302,7 +311,7 @@
 		},
 		{
 			"name": "right_arm",
-			"origin": [0, 24, 0],
+			"origin": [4, 24, 0],
 			"color": 0,
 			"configs": {
 				"default": {},
@@ -319,7 +328,7 @@
 		},
 		{
 			"name": "left_arm",
-			"origin": [0, 24, 0],
+			"origin": [-4, 24, 0],
 			"color": 0,
 			"configs": {
 				"default": {},
@@ -353,7 +362,7 @@
 		},
 		{
 			"name": "right_leg",
-			"origin": [0, 13, 0],
+			"origin": [2, 13, 0],
 			"color": 0,
 			"configs": {
 				"default": {},
@@ -370,7 +379,7 @@
 		},
 		{
 			"name": "left_leg",
-			"origin": [0, 13, 0],
+			"origin": [-2, 13, 0],
 			"color": 0,
 			"configs": {
 				"default": {},
@@ -393,6 +402,7 @@
 			"folder": "block",
 			"namespace": "",
 			"id": "0",
+			"group": "",
 			"width": 32,
 			"height": 32,
 			"uv_width": 16,
@@ -419,8 +429,8 @@
 	"variants": {
 		"default": {
 			"name": "default",
-			"display_name": "default",
-			"uuid": "0db2132f-67a4-514e-c53e-5a824b0acdc7",
+			"display_name": "Default",
+			"uuid": "c9b5cb69-2f5e-01b8-54fc-82cd051b1f43",
 			"texture_map": {},
 			"excluded_nodes": [],
 			"is_default": true
@@ -450,7 +460,7 @@
 			"override": false,
 			"length": 2,
 			"snapping": 20,
-			"selected": true,
+			"selected": false,
 			"saved": true,
 			"path": "",
 			"anim_time_update": "",
