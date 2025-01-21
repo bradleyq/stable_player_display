@@ -34,7 +34,7 @@ summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson
 python aj-convert.py
 ```
 
-3. Run `aj-convert.py` in the datapack root folder:
+3. Run `aj-convert.py` in the datapack root folder (make sure it is next to the `data` folder):
    - **Run this script only once per AJ export!**
    - Requires `python3`.
    - Requires `nbtlib`: [https://pypi.org/project/nbtlib/](https://pypi.org/project/nbtlib/).
