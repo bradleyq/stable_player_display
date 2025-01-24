@@ -28,7 +28,7 @@ summon minecraft:item_display ~-0.125 ~0.7 ~ {Tags:["leg_l"],item_display:"third
 ```
 Here is a tutorial using the sample_datapack:
 
-
+https://github.com/user-attachments/assets/648255b9-2317-4c77-b5a4-659bc418a4ef
 
 ### Animated Java: Datapack
 
@@ -66,7 +66,7 @@ loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot minecraft
 
 Here is a step by step tutorial:
 
-
+https://github.com/user-attachments/assets/60d93f72-8013-423c-877e-a9c5d1b1a15c
 
 ### Animated Java: Plugin mode (TODO: Add plugin mode into the script)
 1. Export the player rig from Animated Java with plugin mode enabled
