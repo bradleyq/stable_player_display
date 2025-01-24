@@ -76,7 +76,6 @@ def modify_nbt_passengers(nbtRoot, project, offsets, playerName):
             tag = f"aj.{project}.bone.{offsetPair[0]}"
             if tag in passenger["Tags"]:
                 passenger["transformation"]["translation"][1] += offsetPair[1]
-                passenger["item"]["components"]["minecraft:item_model"] = nbtlib.tag.String(f"player_display:player/" + offsetPair[0])
                 passenger["item_display"] = nbtlib.tag.String("thirdperson_righthand")
                 
                 if playerName:
@@ -172,117 +171,22 @@ def modify_frame_line(line, offsets):
             return tmpLine + nbtlib.serialize_tag(nbtRoot, compact=True) + "\n"
     return line
 
-def process_default_variant_mcfunction(project, offsets):
-    """Process the apply.mcfunction file and update corresponding zzz files."""
-    print("Updating default variant")
-    zzz_folder_path = os.path.join(".", "data", "animated_java", "function", project, "variants", "default", "zzz")
-
-    # Loop through each .mcfunction file in the zzz folder
-    for file in os.listdir(zzz_folder_path):
-        file_path = os.path.join(zzz_folder_path, file)
-        
-        # Read all lines
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-        
-        # Write the modified lines back to the file
-        with open(file_path, 'w') as file:
-            file.writelines(modify_variant_line(lines[1],project)) # Update the second line
-
-def modify_variant_line(line,project):
-    # Extract the last part after the last "/" using regex
-    match = re.search(r'([^/]+)"$', line)
-    if match:
-        last_name = match.group(1)  # Get the last part after the last "/"
-        # Modify the line with the new format
-        return f'data modify entity @s item.components.minecraft:item_model set value "player_display:player/{last_name}"\n'
-    return line
-
-def generate_slim_variant(project):
-    """Copy the 'default' folder to 'slim', update 'apply.mcfunction' references, and modify zzz files."""
-    
-    # Define paths for 'default' and 'slim'
-    base_path = os.path.join(".", "data", "animated_java", "function", project, "variants")
-    default_folder_path = os.path.join(base_path, "default")
-    slim_folder_path = os.path.join(base_path, "slim")
-    
-    # Copy 'default' folder to 'slim'
-    os.makedirs(slim_folder_path, exist_ok=True)
-    
-    # Copy all files and subdirectories from 'default' to 'slim'
-    for root, dirs, files in os.walk(default_folder_path):
-        relative_path = os.path.relpath(root, default_folder_path)
-        target_dir = os.path.join(slim_folder_path, relative_path)
-        os.makedirs(target_dir, exist_ok=True)
-        
-        for file in files:
-            src_file = os.path.join(root, file)
-            dest_file = os.path.join(target_dir, file)
-            with open(src_file, 'rb') as f_src, open(dest_file, 'wb') as f_dest:
-                f_dest.write(f_src.read())
-    
-    # Modify 'apply.mcfunction' file in the 'slim' folder
-    apply_file_path = os.path.join(slim_folder_path, "apply.mcfunction")
-    
-    if os.path.isfile(apply_file_path):
-        with open(apply_file_path, 'r') as file:
-            content = file.read()
-        
-        # Replace "default" with "slim" in the content
-        modified_content = content.replace("default/zzz","slim/zzz")
-        
-        # Write the modified content back to the file
-        with open(apply_file_path, 'w') as file:
-            file.write(modified_content)
-
-    # Modify files in 'zzz' folder in 'slim'
-    zzz_folder_path = os.path.join(slim_folder_path, "zzz")
-    
-    for filename in os.listdir(zzz_folder_path):
-        if filename.endswith(".mcfunction"):
-            file_path = os.path.join(zzz_folder_path, filename)
-            
-            # Read the file and check the last line
-            with open(file_path, 'r') as file:
-                lines = file.readlines()
-            
-            if lines:
-                # Check if the last line contains keys
-                if lines[-1].strip().endswith('right_arm"'):
-                    lines[-1] = re.sub(r'right_arm"', 'slim_right"', lines[-1])
-                elif lines[-1].strip().endswith('left_arm"'):
-                    lines[-1] = re.sub(r'left_arm"', 'slim_left"', lines[-1])
-                elif lines[-1].strip().endswith('right_forearm"'):
-                    lines[-1] = re.sub(r'right_forearm"', 'forearm_slim_right"', lines[-1])
-                elif lines[-1].strip().endswith('left_forearm"'):
-                    lines[-1] = re.sub(r'left_forearm"', 'forearm_slim_left"', lines[-1])
-            
-            # Write the modified lines back to the file
-            with open(file_path, 'w') as file:
-                file.writelines(lines)
-    
-    print("Generated Slim variant")
-
 def main():
     project, playerName, offsets = parse_arguments()
 
     print(f"Running aj-convert on project {project}")
 
-    summonPath = os.path.join(".", "data", "animated_java", "function", project, "summon.mcfunction")
+    summonPath = os.path.join(".","animated_java", "data", "animated_java", "function", project, "summon.mcfunction")
     read_and_modify_summon_function(summonPath, project, offsets, playerName)
 
     mcfunction_paths = [
-        os.path.join(".", "data", "animated_java", "function", project, "set_default_pose.mcfunction"),
-        os.path.join(".", "data", "animated_java", "function", project, "apply_default_pose.mcfunction")
+        os.path.join(".","animated_java", "data", "animated_java", "function", project, "set_default_pose.mcfunction"),
+        os.path.join(".","animated_java", "data", "animated_java", "function", project, "apply_default_pose.mcfunction")
     ]
     process_pose_files(mcfunction_paths, project, offsets)
 
-    animations_rootpath = os.path.join(".", "data", "animated_java", "function", project, "animations")
+    animations_rootpath = os.path.join(".","animated_java", "data", "animated_java", "function", project, "animations")
     modify_animation_frames(animations_rootpath, project, offsets)
-
-    process_default_variant_mcfunction(project,offsets)
-
-    generate_slim_variant(project)
 
 if __name__ == "__main__":
     main()

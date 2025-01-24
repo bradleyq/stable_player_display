@@ -10,6 +10,7 @@ This repository contains models and shaders to display any player skin using onl
 - **Do NOT modify the Rotation[1]** NBT (pitch) of any bone in the model.
 - The model cannot be loaded from more than 512 meters **vertical distance** from the player (unlimited horizontal range).
 - If using `transformation.translation[1]` for animations, subtract the required y-offset (if you are using AJ, the script handles this).
+- Will only be updated for **Minecraft Vanilla**, if it breaks in a moded client I won't fix it.
 
 ## Use Modes
 
@@ -19,12 +20,15 @@ If you want to summon item displays, use the following commands (it is recommend
 
 ```
 summon minecraft:item_display ~ ~1.4 ~ {Tags:["head"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,0.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-summon minecraft:item_display ~ ~1.4 ~ {Tags:["arm_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-1024.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-summon minecraft:item_display ~ ~1.4 ~ {Tags:["arm_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-2048.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~0.25 ~1.4 ~ {Tags:["arm_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-1024.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~-0.25 ~1.4 ~ {Tags:["arm_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-2048.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
 summon minecraft:item_display ~ ~1.4 ~ {Tags:["torso"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-3072.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-4096.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
-summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-5120.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~0.125 ~0.7 ~ {Tags:["leg_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-4096.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+summon minecraft:item_display ~-0.125 ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-5120.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
 ```
+Here is a tutorial using the sample_datapack:
+
+
 
 ### Animated Java: Datapack
 
@@ -48,7 +52,7 @@ Available flags:
    1. **Do NOT export the AJ project directly into the default RP; use the default RP without modifications.**
 5. Summon the rig following the [AJ Documentation](https://animated-java.dev/docs/introduction/what-is-animated-java).
    1. **Make sure to use ```execute rotated ~ 0``` when summoning the rig. And NEVER modify the Rotation[1] of the model.**
-   2. Example summon command: ```execute rotated ~ 0 run function animated_java:[project_name]/summon/default```
+   2. Example summon command: ```execute rotated ~ 0 run function animated_java:[project_name]/summon {args:{variant:"default"}}```
 6. Use the provided loot tables (a slim variant is available) to update the AJ model in-game:
 
 ```
@@ -59,6 +63,11 @@ loot replace entity @e[tag=aj.player_anim.bone.torso] hotbar.0 loot minecraft:pl
 loot replace entity @e[tag=aj.player_anim.bone.right_leg] hotbar.0 loot minecraft:player/right_leg
 loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot minecraft:player/left_leg
 ```
+
+Here is a step by step tutorial:
+
+
+
 ### Animated Java: Plugin mode (TODO: Add plugin mode into the script)
 1. Export the player rig from Animated Java with plugin mode enabled
 2. When you parsed blueprint, you should change Y translation of rig bones. 
@@ -90,11 +99,20 @@ Custom variants are not automatically processed by the script. If you want to ad
 
 ## Issues You Might Encounter
 
+- **Why is my model invisible?**: This is the most possible outcome if you didn't follow the steps correctly. So make sure to check this steps:
+   1. You summoned the model withouth `rotated ~ 0`.
+   2. You didn't set a model skin, so the game has no skin to display.
+   3. You are not using the correct resourcepack version with your minecraft version.
+   4. You changed the name paths of the resourcepack or loot tables and now the game can't find the models.
+   5. Probably there are more, but this shouldn't be an issue if you followed the steps correctly.
+
+-  There is a tutorial and a step by step explanation on how to setup the model. I check constantly that everything works fine for every supported release so don't bother me asking why the model is invisible if you didn't exactly tested everything in this README twice.
+
 - **When running the script**: The script includes multiple error checks for possible issues during processing. Please **READ** the messages output by the terminal carefully. I won't provide any help if the error is something like: `FileNotFoundError: [Errno 2] No such file or directory:` or similar. Make sure you are using the script correctly and in the proper directories. (However, if it worked in a previous AJ version but doesn't now, feel free to ask me.)
 
 - **Problems with the resource pack**: The resource pack may break with each new version of Minecraft since shaders are still quite experimental. I'll try to update it to the latest version when possible. Make sure to use this repo with the last-supported Minecraft version, and wait for an update if a new version of Minecraft or Animated Java is released.
 
-- **Editing the pivot points of the model**: If you've tried animating the AJ model, you may have found the pivot points inconvenient to work with and attempted to change them, which may have caused the model to distort. To fix this, you need to manually adjust the `translation` for each model part in `resourcepack\assets\player_display\models\item\player`.
+- **Editing the pivot points of the model**: If you've tried animating the AJ model, you may have found the pivot points inconvenient to work with and attempted to change them, which may have caused the model to distort. To fix this, you need to manually adjust the `translation` for each model part in th resourcepack.
 
 Make sure you have all the necessary libraries installed, export the project correctly, use ONLY the resource pack from this repo, test everything twice, and follow the AJ documentation. 
 

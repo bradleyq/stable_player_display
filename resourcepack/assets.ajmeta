@@ -1,0 +1,26 @@
+{
+	"player_display": {
+		"files": [
+			"assets/animated_java/models/empty.json",
+			"assets/animated_java/textures/blueprint/player_display/skin.png",
+			"assets/animated_java/items/blueprint/player_display/torso.json",
+			"assets/animated_java/items/blueprint/player_display/head.json",
+			"assets/animated_java/items/blueprint/player_display/right_arm.json",
+			"assets/animated_java/items/blueprint/player_display/left_arm.json",
+			"assets/animated_java/items/blueprint/player_display/right_leg.json",
+			"assets/animated_java/items/blueprint/player_display/left_leg.json",
+			"assets/animated_java/models/blueprint/player_display/torso.json",
+			"assets/animated_java/models/blueprint/player_display/head.json",
+			"assets/animated_java/models/blueprint/player_display/right_arm.json",
+			"assets/animated_java/models/blueprint/player_display/left_arm.json",
+			"assets/animated_java/models/blueprint/player_display/right_leg.json",
+			"assets/animated_java/models/blueprint/player_display/left_leg.json",
+			"assets/animated_java/models/blueprint/player_display/slim/head.json",
+			"assets/animated_java/models/blueprint/player_display/slim/right_arm.json",
+			"assets/animated_java/models/blueprint/player_display/slim/left_arm.json",
+			"assets/animated_java/models/blueprint/player_display/slim/right_leg.json",
+			"assets/animated_java/models/blueprint/player_display/slim/left_leg.json",
+			"assets/animated_java/models/blueprint/player_display/slim/torso.json"
+		]
+	}
+}
