@@ -2,8 +2,6 @@
 
 This repository contains models and shaders to display any player skin using only a resource pack and display entities.
 
-**The original repository is [here](https://github.com/bradleyq/stable_player_display/tree/main). This fork is intended to update the original work as long as I'm capable of doing so, and to provide better compatibility with [Animated Java](https://animated-java.dev/).**
-
 ## Limitations
 
 - Use only with `item_display`.
@@ -145,4 +143,5 @@ If you encounter any errors or a new version breaks some aspect of the resource 
 - **Resonance#3633**: Providing custom models and base templates.
 - **[sireroo](https://github.com/sireroo)**: Mild inspiration.
 - **[bradleyq](https://github.com/bradleyq/stable_player_display/tree/main)**: Original creator.
+- **[erkko68] (https://github.com/erkko68/stable_player_display): updated AJ fork.
 ---
