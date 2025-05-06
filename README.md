@@ -143,5 +143,5 @@ If you encounter any errors or a new version breaks some aspect of the resource 
 - **Resonance#3633**: Providing custom models and base templates.
 - **[sireroo](https://github.com/sireroo)**: Mild inspiration.
 - **[bradleyq](https://github.com/bradleyq/stable_player_display/tree/main)**: Original creator.
-- **[erkko68] (https://github.com/erkko68/stable_player_display): updated AJ fork.
+- **[erkko68](https://github.com/erkko68/stable_player_display)**: updated AJ fork.
 ---
