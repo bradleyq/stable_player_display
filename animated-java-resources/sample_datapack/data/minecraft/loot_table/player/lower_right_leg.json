@@ -1,0 +1,30 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:player_head",
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:item_model": "animated_java:blueprint/player_display/lower_right_leg",
+                "minecraft:custom_model_data": {
+                  "strings": [
+                      "default"
+                  ]
+                }
+              }
+            },
+            {
+              "function": "minecraft:fill_player_head",
+              "entity": "this"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
