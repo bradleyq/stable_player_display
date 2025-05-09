@@ -24,8 +24,8 @@ in vec2 texCoord0;
 in vec2 texCoord1;
 in float part;
 
-#define FADERANGE 16.0
-#define FADEBIAS 10.0
+#define FADERANGE 12.0
+#define FADEBIAS 8.0
 #define MINALPHA 0.25
 
 const mat4 bayer4 = mat4( 0.0 / 16.0,  8.0 / 16.0,  2.0 / 16.0, 10.0 / 16.0,
@@ -59,9 +59,10 @@ void main() {
 
         vec3 underCol = texture(Sampler0, texCoord1).rgb;
         vec3 trueMix = mix(underCol, fragColor.rgb, fragColor.a);
+        float fade = mix(fragColor.a, 1.0, clamp((vertexDistance - FADEBIAS) / (FADERANGE - FADEBIAS), 0.0, 1.0));
 
-        fragColor = mix(fragColor, vec4(trueMix, 1.0), clamp((vertexDistance - FADEBIAS) / (FADERANGE - FADEBIAS), 0.0, 1.0));
-        if (fragColor.a < bayer4[int(gl_FragCoord.x) % 4][int(gl_FragCoord.y) % 4]) {
+        fragColor = vec4((trueMix - (1 - fade) * underCol) / fade,  fade);
+        if (fragColor.a < bayer4[int(gl_FragCoord.x) % 4][int(gl_FragCoord.y) % 4] + (0.5 / 16.0)) {
             discard;
         }
         else {
