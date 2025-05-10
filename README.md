@@ -46,6 +46,8 @@ models + shaders to display player models using new item_display entites.
 /item replace entity @e[tag=leg_r] hotbar.0 with minecraft:player_head[minecraft:profile="Notch",minecraft:custom_model_data=5]
 /item replace entity @e[tag=leg_l] hotbar.0 with minecraft:player_head[minecraft:profile="Notch",minecraft:custom_model_data=6]
 ```
+  
+### what the values mean
 
 - `view_range:0.6f` guarantees the player model will be unloaded within 512 blocks vertically
 - `translation:` skin is loaded based on y offset:
@@ -61,8 +63,6 @@ models + shaders to display player models using new item_display entites.
   -4096 = right leg
   
   -5120 = left leg
-  
-### what the values mean
 
 - `~ ~1.4 ~ ` when standing, head arms and torso pivot from here
 - `~ ~0.7 ~`  when standing, legs pivot from here
