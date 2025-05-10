@@ -13,6 +13,7 @@ models + shaders to display player models using new item_display entites.
 - if using transformation.transtation[1] for animations, subtract required y offset
 
 ## usage
+### pre 1.20.5
 
 ```
 /summon minecraft:item_display ~ ~1.4 ~ {Tags:["head"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,0.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
@@ -27,6 +28,23 @@ models + shaders to display player models using new item_display entites.
 /item replace entity @e[tag=torso] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:4}
 /item replace entity @e[tag=leg_r] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:5}
 /item replace entity @e[tag=leg_l] hotbar.0 with minecraft:player_head{SkullOwner:"Notch",CustomModelData:6}
+```
+
+### 1.20.5 and later
+
+```
+/summon minecraft:item_display ~ ~1.4 ~ {Tags:["head"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,0.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+/summon minecraft:item_display ~ ~1.4 ~ {Tags:["arm_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-1024.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+/summon minecraft:item_display ~ ~1.4 ~ {Tags:["arm_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-2048.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+/summon minecraft:item_display ~ ~1.4 ~ {Tags:["torso"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-3072.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+/summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-4096.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+/summon minecraft:item_display ~ ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-5120.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
+/item replace entity @e[tag=head] hotbar.0 with minecraft:player_head[minecraft:profile="Notch",minecraft:custom_model_data=1]
+/item replace entity @e[tag=arm_r] hotbar.0 with minecraft:player_head[minecraft:profile="Notch",minecraft:custom_model_data=2]
+/item replace entity @e[tag=arm_l] hotbar.0 with minecraft:player_head[minecraft:profile="Notch",minecraft:custom_model_data=3]
+/item replace entity @e[tag=torso] hotbar.0 with minecraft:player_head[minecraft:profile="Notch",minecraft:custom_model_data=4]
+/item replace entity @e[tag=leg_r] hotbar.0 with minecraft:player_head[minecraft:profile="Notch",minecraft:custom_model_data=5]
+/item replace entity @e[tag=leg_l] hotbar.0 with minecraft:player_head[minecraft:profile="Notch",minecraft:custom_model_data=6]
 ```
 
 - `view_range:0.6f` guarantees the player model will be unloaded within 512 blocks vertically
@@ -44,6 +62,8 @@ models + shaders to display player models using new item_display entites.
   
   -5120 = left leg
   
+### what the values mean
+
 - `~ ~1.4 ~ ` when standing, head arms and torso pivot from here
 - `~ ~0.7 ~`  when standing, legs pivot from here
 - `SkullOwner:` player skin to load

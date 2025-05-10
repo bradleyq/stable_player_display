@@ -73,6 +73,16 @@ const vec2[] origins = vec2[](
 
 const int[] faceremap = int[](0, 0, 1, 1, 2, 3, 4, 5);
 
+float fog_distance_legacy(mat4 modelViewMat, vec3 pos, int shape) {
+    if (shape == 0) {
+        return length((modelViewMat * vec4(pos, 1.0)).xyz);
+    } else {
+        float distXZ = length((modelViewMat * vec4(pos.x, 0.0, pos.z, 1.0)).xyz);
+        float distY = length((modelViewMat * vec4(0.0, pos.y, 0.0, 1.0)).xyz);
+        return max(distXZ, distY);
+    }
+}
+
 void main() {
     vertexColor = minecraft_mix_light(Light0_Direction, Light1_Direction, normalize(Normal), Color);
     lightMapColor = texelFetch(Sampler2, UV2 / 16, 0);
@@ -85,7 +95,7 @@ void main() {
         part = 0.0;
         texCoord0 = UV0;
         texCoord1 = vec2(0.0);
-        vertexDistance = fog_distance(ModelViewMat, IViewRotMat * Position, FogShape);
+        vertexDistance = fog_distance_legacy(ModelViewMat, IViewRotMat * Position, FogShape);
         gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
     }
     else {
@@ -169,7 +179,7 @@ void main() {
             UVout2 /= float(SKINRES);
         }
 
-        vertexDistance = fog_distance(ModelViewMat, wpos, FogShape);
+        vertexDistance = fog_distance_legacy(ModelViewMat, wpos, FogShape);
         texCoord0 = UVout;
         texCoord1 = UVout2;
     }
