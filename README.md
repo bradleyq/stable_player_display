@@ -4,17 +4,17 @@ This repository contains models and shaders to display any player skin using onl
 
 ## Limitations
 
-- Use only with `item_display`.
+- Use only with `item_display` entities.
 - **Do NOT modify the Rotation[1]** NBT (pitch) of any bone in the model.
 - The model cannot be loaded from more than 512 meters **vertical distance** from the player (unlimited horizontal range).
 - If using `transformation.translation[1]` for animations, subtract the required y-offset (if you are using AJ, the script handles this).
-- Will only be updated for **Minecraft Vanilla**, if it breaks in a moded client I won't fix it.
+- Will only be updated for **Minecraft Vanilla**, if it breaks in a modded client, you are out of luck.
 
 ## Use Modes
 
 ### Raw Item Displays
 
-If you want to summon item displays, use the following commands (it is recommended to use a function):
+If you want to manually summon item displays, use the following commands (it is recommended to use a function):
 
 ```
 summon minecraft:item_display ~ ~1.4 ~ {Tags:["head"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,0.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
@@ -24,6 +24,19 @@ summon minecraft:item_display ~ ~1.4 ~ {Tags:["torso"],item_display:"thirdperson
 summon minecraft:item_display ~0.125 ~0.7 ~ {Tags:["leg_r"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-4096.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
 summon minecraft:item_display ~-0.125 ~0.7 ~ {Tags:["leg_l"],item_display:"thirdperson_righthand",view_range:0.6f,transformation:{translation:[0.0f,-5120.0f,0.0f],left_rotation:[0.0f,0.0f,0.0f,1.0f],scale:[1.0f,1.0f,1.0f],right_rotation:[0.0f,0.0f,0.0f,1.0f]}}
 ```
+
+Then populate the displays:
+
+```
+item replace entity @e[tag=head] hotbar.0 with minecraft:player_head[minecraft:item_model="animated_java:blueprint/player_display/head",minecraft:profile="jeb_"]
+item replace entity @e[tag=arm_r] hotbar.0 with minecraft:player_head[minecraft:item_model="animated_java:blueprint/player_display/right_arm",minecraft:profile="jeb_"]
+item replace entity @e[tag=arm_l] hotbar.0 with minecraft:player_head[minecraft:item_model="animated_java:blueprint/player_display/left_arm",minecraft:profile="jeb_"]
+item replace entity @e[tag=torso] hotbar.0 with minecraft:player_head[minecraft:item_model="animated_java:blueprint/player_display/torso",minecraft:profile="jeb_"]
+item replace entity @e[tag=leg_r] hotbar.0 with minecraft:player_head[minecraft:item_model="animated_java:blueprint/player_display/right_leg",minecraft:profile="jeb_"]
+item replace entity @e[tag=leg_l] hotbar.0 with minecraft:player_head[minecraft:item_model="animated_java:blueprint/player_display/left_leg",minecraft:profile="jeb_"]
+```
+> **_NOTE:_**  For split models, there are additional `right_forearm`, `left_forearm`, `lower_right_leg`, and `lower_left_leg` models.
+
 Here is a tutorial using the sample_datapack:
 
 https://github.com/user-attachments/assets/648255b9-2317-4c77-b5a4-659bc418a4ef
@@ -104,11 +117,11 @@ Custom variants are not automatically processed by the script. If you want to ad
    4. You changed the name paths of the resourcepack or loot tables and now the game can't find the models.
    5. Probably there are more, but this shouldn't be an issue if you followed the steps correctly.
 
--  There is a tutorial and a step by step explanation on how to setup the model. I check constantly that everything works fine for every supported release so don't bother me asking why the model is invisible if you didn't exactly tested everything in this README twice.
+-  There is a tutorial and a step by step explanation on how to setup the model. Confirm your steps before opening any issues.
 
-- **When running the script**: The script includes multiple error checks for possible issues during processing. Please **READ** the messages output by the terminal carefully. I won't provide any help if the error is something like: `FileNotFoundError: [Errno 2] No such file or directory:` or similar. Make sure you are using the script correctly and in the proper directories. (However, if it worked in a previous AJ version but doesn't now, feel free to ask me.)
+- **When running the script**: The script includes multiple error checks for possible issues during processing. Please **READ** the messages output by the terminal carefully. Basic issues like `FileNotFoundError: [Errno 2] No such file or directory:` are not bug report worthy. Make sure you are using the script correctly and in the proper directories. (However, if it worked in a previous AJ version but doesn't now, feel free to ask me.)
 
-- **Problems with the resource pack**: The resource pack may break with each new version of Minecraft since shaders are still quite experimental. I'll try to update it to the latest version when possible. Make sure to use this repo with the last-supported Minecraft version, and wait for an update if a new version of Minecraft or Animated Java is released.
+- **Problems with the resource pack**: The resource pack may break with each new version of Minecraft since shaders are still quite experimental. Make sure to use this repo with the last-supported Minecraft version, and wait for an update if a new version of Minecraft or Animated Java is released.
 
 - **Editing the pivot points of the model**: If you've tried animating the AJ model, you may have found the pivot points inconvenient to work with and attempted to change them, which may have caused the model to distort. To fix this, you need to manually adjust the `translation` for each model part in th resourcepack.
 
@@ -132,11 +145,11 @@ Make sure you have all the necessary libraries installed, export the project cor
 ### 4. **Additional Context**
    - **Other Information**: Add any other information you think might be helpful, such as related issues, workarounds you've tried, or relevant libraries.
 
-Please note, **I can't provide any help beyond updating the script and the shader**. If you want to add any other functionality, you will need to do it yourself.
+Please note, **Help cannot be provided beyond updating the script and the shader**. If you want to add any other functionality, you will need to do it yourself.
 
 ---
 
-If you encounter any errors or a new version breaks some aspect of the resource pack or script, feel free to DM me on Discord: **erkko_68**.
+If you encounter any errors or a new version breaks some aspect of the resource pack or script, feel free to DM on Discord: **erkko_68**.
 
 ## Credits
 
