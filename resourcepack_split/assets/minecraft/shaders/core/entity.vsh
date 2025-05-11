@@ -7,7 +7,7 @@
 #define MAYBE_PLAYERDISP 1
 #endif
 
-#define SPLITMODEL 0
+#define SPLITMODEL 1
 
 in vec3 Position;
 in vec4 Color;
