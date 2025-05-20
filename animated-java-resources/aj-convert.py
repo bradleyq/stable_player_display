@@ -1,192 +1,173 @@
 import sys
 import nbtlib
 import os
-import re
 
-OFFSETS = (
-    ("head", 0.0), ("right_arm", -1024.0), ("left_arm", -2048.0),
-    ("torso", -3072.0), ("right_leg", -4096.0), ("left_leg", -5120.0)
-)
+# Offset mappings for different player model modes
+DEFAULT_OFFSETS = {
+    "head": 0.0, "right_arm": -1024.0, "left_arm": -2048.0,
+    "torso": -3072.0, "right_leg": -4096.0, "left_leg": -5120.0
+}
 
-SPLIT_OFFSETS = (
-    ("head", 0.0),("right_arm", -1024.0), ("right_forearm", -6144.0), ("left_arm", -2048.0), ("left_forearm", -7168.0),
-    ("torso", -3072.0), ("waist", -8192.0), ("right_leg", -4096.0), ("lower_right_leg", -9216.0) ,("left_leg", -5120.0), ("lower_left_leg", -10240.0)
-)
+SPLIT_OFFSETS = {
+    "head": 0.0, "right_arm": -1024.0, "right_forearm": -6144.0,
+    "left_arm": -2048.0, "left_forearm": -7168.0, "torso": -3072.0,
+    "waist": -8192.0, "right_leg": -4096.0, "lower_right_leg": -9216.0,
+    "left_leg": -5120.0, "lower_left_leg": -10240.0
+}
 
-def parse_arguments():
-    """Parse command-line arguments."""
-    nArgs = len(sys.argv)
-    if nArgs < 2:
-        print("Usage: aj-convert.py [project] [optional:flags]")
-        print("Available flags:")
-        print("\t-pn=[playerName]\tPlayer skin to use. Default '' (no skin), must be set later in game")
-        print("\t-split\tEnables split mode where the player model has extra joints (player_split.ajblueprint)")
+def parse_cli_arguments():
+    """Parse and validate command-line arguments."""
+    if len(sys.argv) < 2:
+        print_usage()
         sys.exit(1)
     
     project = sys.argv[1]
-    playerName = ""
-    offsets = OFFSETS
+    player_name = ""
+    offsets = DEFAULT_OFFSETS
 
-    if nArgs > 2:
-        for arg in sys.argv[2:]:
-            if arg.startswith("-pn="):
-                playerName = arg[4:]
-            if arg.startswith("-split"):
-                offsets = SPLIT_OFFSETS
+    for arg in sys.argv[2:]:
+        if arg.startswith("-pn="):
+            player_name = arg[4:]
+        elif arg == "-split":
+            offsets = SPLIT_OFFSETS
 
-    return project, playerName, offsets
+    return project, player_name, offsets
 
-def read_and_modify_summon_function(summonPath, project, offsets, playerName):
-    """Read and modify the summon.mcfunction file."""
-    summonResult = ""
+def print_usage():
+    """Display usage instructions."""
+    print("Usage: aj-convert.py [project] [optional:flags]")
+    print("Available flags:")
+    print("\t-pn=[playerName]\tSpecify the player skin (default: none)")
+    print("\t-split\tEnable split mode with extra joints")
 
+def modify_summon_file(filepath, project, offsets, player_name):
+    """Modify the summon.mcfunction file with new offsets and player skin."""
     try:
-        with open(summonPath, "r") as f:
-            for _ in range(3):
-                summonResult += f.readline()
+        with open(filepath, "r") as file:
+            summon_content = [file.readline() for _ in range(3)]
+            summon_data = file.readline()
 
-            temp = f.readline()
-            
-            if temp[-4] == ',':
-                temp = temp[:-4] + temp[-3:]  # Remove malformed last comma
+            if summon_data[-4] == ",":
+                summon_data = summon_data[:-4] + summon_data[-3:]
 
-            nbtStart = temp.index("~ ~ ~ ") + len("~ ~ ~ ")
-            summonResult += temp[:nbtStart]
-            nbt_data = temp[nbtStart:]
+            nbt_start = summon_data.index("~ ~ ~ ") + len("~ ~ ~ ")
+            summon_content.append(summon_data[:nbt_start])
+            nbt_data = summon_data[nbt_start:]
 
-            nbtRoot = nbtlib.parse_nbt(nbt_data)
-            modify_nbt_passengers(nbtRoot, project, offsets, playerName)
+            nbt_root = nbtlib.parse_nbt(nbt_data)
+            update_nbt_passengers(nbt_root, project, offsets, player_name)
 
-            summonResult += nbtlib.serialize_tag(nbtRoot, compact=True) + "\n"
-            summonResult += f.readline()
+            summon_content.append(nbtlib.serialize_tag(nbt_root, compact=True) + "\n")
+            summon_content.append(file.readline())
 
-        with open(summonPath, "w") as f:
-            f.write(summonResult)
+        with open(filepath, "w") as file:
+            file.writelines(summon_content)
 
-        print(f"Successfully modified {summonPath}")
+        print(f"Successfully updated: {filepath}")
 
     except Exception as e:
-        print(f"Error processing {summonPath}: {e}")
+        print(f"Error updating {filepath}: {e}")
         sys.exit(1)
 
-def modify_nbt_passengers(nbtRoot, project, offsets, playerName):
-    """Modify NBT data for passengers."""
-    for passenger in nbtRoot["Passengers"][1:]:  # Skip First Marker
-        for offsetPair in offsets:
-            tag = f"aj.{project}.bone.{offsetPair[0]}"
+def update_nbt_passengers(nbt_root, project, offsets, player_name):
+    """Apply offsets and player skin to NBT passenger data."""
+    for passenger in nbt_root["Passengers"][1:]:
+        for bone_name, offset in offsets.items():
+            tag = f"aj.{project}.bone.{bone_name}"
             if tag in passenger["Tags"]:
-                passenger["transformation"]["translation"][1] += offsetPair[1]
+                passenger["transformation"]["translation"][1] += offset
                 passenger["item_display"] = nbtlib.tag.String("thirdperson_righthand")
-                
-                if playerName:
-                    passenger["item"]["id"] = nbtlib.tag.String("minecraft:player_head")
-                    passenger["item"]["components"]["profile"] = nbtlib.tag.Compound({"name": nbtlib.tag.String(playerName)})
-                else:
-                    passenger["item"]["id"] = nbtlib.tag.String("minecraft:air")
+                passenger["item"]["id"] = nbtlib.tag.String("minecraft:player_head" if player_name else "minecraft:air")
+                if player_name:
+                    passenger["item"]["components"]["profile"] = nbtlib.tag.Compound({"name": nbtlib.tag.String(player_name)})
 
-def process_pose_files(paths, project, offsets):
-    """Process set_default_pose.mcfunction and apply_default_pose.mcfunction files."""
-    for path in paths:
+def update_pose_files(filepaths, project, offsets):
+    """Update set_default_pose.mcfunction and apply_default_pose.mcfunction files."""
+    for path in filepaths:
         try:
-            with open(path, "r") as f:
-                lines = f.readlines()
+            with open(path, "r") as file:
+                lines = [modify_pose_line(line, project, offsets) for line in file]
 
-            modifiedLines = []
-            for line in lines:
-                if "merge entity @s" in line:
-                    modifiedLines.append(modify_merge_entity_line(line, project, offsets))
-                else:
-                    modifiedLines.append(line)
+            with open(path, "w") as file:
+                file.writelines(lines)
 
-            with open(path, "w") as f:
-                f.writelines(modifiedLines)
-
-            print(f"Successfully modified {path}")
+            print(f"Updated pose file: {path}")
 
         except Exception as e:
             print(f"Error processing {path}: {e}")
             sys.exit(1)
 
-def modify_merge_entity_line(line, project, offsets):
-    """Modify a merge entity line with the appropriate offsets."""
-    for offsetPair in offsets:
-        if f"[tag=aj.{project}.bone.{offsetPair[0]}]" in line:
-            nbtStart = line.index("merge entity @s ") + len("merge entity @s ")
-            tmpLine = line[:nbtStart]
-            nbtRoot = nbtlib.parse_nbt(line[nbtStart:])
-            nbtRoot["transformation"][7] += offsetPair[1]
-            return tmpLine + nbtlib.serialize_tag(nbtRoot, compact=True) + "\n"
+def modify_pose_line(line, project, offsets):
+    """Modify a line with the appropriate transformation offset."""
+    for bone_name, offset in offsets.items():
+        tag = f"[tag=aj.{project}.bone.{bone_name}]"
+        if tag in line:
+            nbt_start = line.index("merge entity @s ") + len("merge entity @s ")
+            tmp_line = line[:nbt_start]
+            nbt_root = nbtlib.parse_nbt(line[nbt_start:])
+            nbt_root["transformation"][7] += offset
+            return tmp_line + nbtlib.serialize_tag(nbt_root, compact=True) + "\n"
     return line
 
-def modify_animation_frames(rootpath, project, offsets):
-    """Modify all animation frames in the specified project."""
+def process_animation_frames(rootpath, offsets):
+    """Modify all animation frames within the specified root directory."""
     try:
-        subfolders = [entry for entry in os.listdir(rootpath) if os.path.isdir(os.path.join(rootpath, entry))]
-
-        for animation in subfolders:
+        for animation in os.listdir(rootpath):
             frames_path = os.path.join(rootpath, animation, "zzz", "frames")
-            frames = [entry for entry in os.listdir(frames_path) if os.path.isfile(os.path.join(frames_path, entry))]
+            if not os.path.isdir(frames_path):
+                continue
 
-            i = 0
-            for frame in frames:
-                i+=1
-                sys.stdout.write(f"\rEditing {animation} frames: [{i}/{len(frames)}]")
-                framepath = os.path.join(frames_path, frame)
-                modify_frame_file(framepath, offsets)
+            frames = os.listdir(frames_path)
+            for index, frame in enumerate(frames, start=1):
+                frame_path = os.path.join(frames_path, frame)
+                modify_frame_file(frame_path, offsets)
+                sys.stdout.write(f"\rProcessing {animation} frames: [{index}/{len(frames)}]")
             print()
 
     except Exception as e:
-        print(f"Error processing animations: {e}")
+        print(f"Error processing animation frames: {e}")
         sys.exit(1)
 
-def modify_frame_file(framepath, offsets):
-    """Modify a single frame file with the appropriate offsets."""
+def modify_frame_file(filepath, offsets):
+    """Modify an individual frame file by applying offsets."""
     try:
-        with open(framepath, "r") as f:
-            lines = f.readlines()
+        with open(filepath, "r") as file:
+            lines = [modify_frame_line(line, offsets) for line in file]
 
-        modifiedLines = []
-        for line in lines:
-            if ") " in line:
-                modifiedLines.append(modify_frame_line(line, offsets))
-            else:
-                modifiedLines.append(line)
-
-        with open(framepath, "w") as f:
-            f.writelines(modifiedLines)
+        with open(filepath, "w") as file:
+            file.writelines(lines)
 
     except Exception as e:
-        print(f"Error processing frame {framepath}: {e}")
+        print(f"Error processing frame {filepath}: {e}")
 
 def modify_frame_line(line, offsets):
-    """Modify a line in a frame file with the appropriate offsets."""
-    for offsetPair in offsets:
-        # Construct the exact pattern to match
-        target = f"$data merge entity $(bone_{offsetPair[0]})"
+    """Modify a frame line by adjusting transformation values."""
+    for bone_name, offset in offsets.items():
+        target = f"$data merge entity $(bone_{bone_name})"
         if target in line:
-            nbtStart = line.index(") ") + len(") ")
-            tmpLine = line[:nbtStart]
-            nbtRoot = nbtlib.parse_nbt(line[nbtStart:])
-            nbtRoot["transformation"][7] += offsetPair[1]
-            return tmpLine + nbtlib.serialize_tag(nbtRoot, compact=True) + "\n"
+            nbt_start = line.index(") ") + len(") ")
+            tmp_line = line[:nbt_start]
+            nbt_root = nbtlib.parse_nbt(line[nbt_start:])
+            nbt_root["transformation"][7] += offset
+            return tmp_line + nbtlib.serialize_tag(nbt_root, compact=True) + "\n"
     return line
 
 def main():
-    project, playerName, offsets = parse_arguments()
+    project, player_name, offsets = parse_cli_arguments()
 
-    print(f"Running aj-convert on project {project}")
+    print(f"Starting aj-convert for project: {project}")
 
-    summonPath = os.path.join(".","animated_java", "data", "animated_java", "function", project, "summon.mcfunction")
-    read_and_modify_summon_function(summonPath, project, offsets, playerName)
+    summon_filepath = os.path.join(".", "data", "animated_java", "function", project, "summon.mcfunction")
+    modify_summon_file(summon_filepath, project, offsets, player_name)
 
-    mcfunction_paths = [
-        os.path.join(".","animated_java", "data", "animated_java", "function", project, "set_default_pose.mcfunction"),
-        os.path.join(".","animated_java", "data", "animated_java", "function", project, "apply_default_pose.mcfunction")
+    pose_filepaths = [
+        os.path.join(".", "data", "animated_java", "function", project, "set_default_pose.mcfunction"),
+        os.path.join(".", "data", "animated_java", "function", project, "apply_default_pose.mcfunction")
     ]
-    process_pose_files(mcfunction_paths, project, offsets)
+    update_pose_files(pose_filepaths, project, offsets)
 
-    animations_rootpath = os.path.join(".","animated_java", "data", "animated_java", "function", project, "animations")
-    modify_animation_frames(animations_rootpath, project, offsets)
+    animation_rootpath = os.path.join(".", "data", "animated_java", "function", project, "animations")
+    process_animation_frames(animation_rootpath, offsets)
 
 if __name__ == "__main__":
     main()
