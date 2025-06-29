@@ -2,6 +2,8 @@
 
 #moj_import <minecraft:light.glsl>
 #moj_import <minecraft:fog.glsl>
+#moj_import <minecraft:dynamictransforms.glsl>
+#moj_import <minecraft:projection.glsl>
 
 #if defined(ALPHA_CUTOUT) && !defined(EMISSIVE) && !defined(NO_OVERLAY) && !defined(APPLY_TEXTURE_MATRIX)
 #define MAYBE_PLAYERDISP 1
@@ -22,17 +24,8 @@ uniform sampler2D Sampler0;
 uniform sampler2D Sampler1;
 uniform sampler2D Sampler2;
 
-uniform mat4 ModelViewMat;
-uniform mat4 ProjMat;
-uniform mat4 TextureMat;
-uniform float FogStart;
-uniform float FogEnd;
-uniform int FogShape;
-
-uniform vec3 Light0_Direction;
-uniform vec3 Light1_Direction;
-
-out float vertexDistance;
+out float sphericalVertexDistance;
+out float cylindricalVertexDistance;
 out vec4 vertexColor;
 out vec4 lightMapColor;
 out vec4 overlayColor;
@@ -101,7 +94,7 @@ void main() {
     texCoord1 = vec2(0.0);
 
     // check world projmat (not gui), 64x64 texture (player tex dim), valid fog (not hand)
-    if (abs(ProjMat[2][3]) > 10e-6 && dim.x == SKINRES && dim.y == SKINRES && FogEnd > FogStart) {
+    if (abs(ProjMat[2][3]) > 10e-6 && dim.x == SKINRES && dim.y == SKINRES && FogRenderDistanceEnd > FogRenderDistanceStart) {
         int partId = -int((Position.y - MAXRANGE) / SPACING);
 
         part = float(partId);
@@ -195,7 +188,10 @@ void main() {
             vec3 wpos = Position;
             wpos.y += SPACING * (partId + 1);
             gl_Position = ProjMat * ModelViewMat * vec4(wpos, 1.0);
-            vertexDistance = fog_distance(wpos, FogShape);
+
+            sphericalVertexDistance = fog_spherical_distance(wpos);
+            cylindricalVertexDistance = fog_cylindrical_distance(wpos);
+            
             texCoord0 = UVout;
             texCoord1 = UVout2;
 
@@ -206,7 +202,8 @@ void main() {
 
     gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
 
-    vertexDistance = fog_distance(Position, FogShape);
+    sphericalVertexDistance = fog_spherical_distance(Position);
+    cylindricalVertexDistance = fog_cylindrical_distance(Position);
 
     texCoord0 = UV0;
 #ifdef APPLY_TEXTURE_MATRIX
