@@ -1,6 +1,7 @@
 #version 150
 
 #moj_import <minecraft:fog.glsl>
+#moj_import <minecraft:dynamictransforms.glsl>
 
 #if defined(ALPHA_CUTOUT) && !defined(EMISSIVE) && !defined(NO_OVERLAY) && !defined(APPLY_TEXTURE_MATRIX)
 #define MAYBE_PLAYERDISP 1
@@ -10,12 +11,8 @@ uniform sampler2D Sampler0;
 
 uniform mat4 ProjMat;
 
-uniform vec4 ColorModulator;
-uniform float FogStart;
-uniform float FogEnd;
-uniform vec4 FogColor;
-
-in float vertexDistance;
+in float sphericalVertexDistance;
+in float cylindricalVertexDistance;
 in vec4 vertexColor;
 in vec4 lightMapColor;
 in vec4 overlayColor;
@@ -51,7 +48,7 @@ void main() {
 #ifndef EMISSIVE
     color *= lightMapColor;
 #endif
-    fragColor = linear_fog(color, vertexDistance, FogStart, FogEnd, FogColor);
+    fragColor = apply_fog(color, sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
 
 #ifdef MAYBE_PLAYERDISP
     if (part > 1.0 - 10e-6 && fragColor.a < 1.0) {
@@ -59,7 +56,7 @@ void main() {
 
         vec3 underCol = texture(Sampler0, texCoord1).rgb;
         vec3 trueMix = mix(underCol, fragColor.rgb, fragColor.a);
-        float fade = mix(fragColor.a, 1.0, clamp((vertexDistance - FADEBIAS) / (FADERANGE - FADEBIAS), 0.0, 1.0));
+        float fade = mix(fragColor.a, 1.0, clamp((cylindricalVertexDistance - FADEBIAS) / (FADERANGE - FADEBIAS), 0.0, 1.0));
 
         fragColor = vec4((trueMix - (1 - fade) * underCol) / fade,  fade);
         if (fragColor.a < bayer4[int(gl_FragCoord.x) % 4][int(gl_FragCoord.y) % 4] + (0.5 / 16.0)) {

@@ -9,8 +9,7 @@
 					"type": "minecraft:special",
 					"base": "animated_java:blueprint/player_display/slim/left_leg",
 					"model": {
-						"type": "minecraft:head",
-						"kind": "player"
+						"type": "minecraft:player_head"
 					  }
 				}
 			}
@@ -19,8 +18,7 @@
 			"type": "minecraft:special",
 			"base": "animated_java:blueprint/player_display/left_leg",
 			"model": {
-				"type": "minecraft:head",
-				"kind": "player"
+				"type": "minecraft:player_head"
 			  }
 		},
 		"tints": [
