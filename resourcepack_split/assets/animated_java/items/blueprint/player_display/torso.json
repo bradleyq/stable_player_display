@@ -9,9 +9,8 @@
 					"type": "minecraft:special",
 					"base": "animated_java:blueprint/player_display/slim/torso",
 					"model": {
-						"type": "minecraft:head",
-						"kind": "player"
-					  }
+						"type": "minecraft:player_head"
+					}
 				}
 			}
 		],
@@ -19,9 +18,8 @@
 			"type": "minecraft:special",
 			"base": "animated_java:blueprint/player_display/torso",
 			"model": {
-				"type": "minecraft:head",
-				"kind": "player"
-			  }
+				"type": "minecraft:player_head"
+			}
 		},
 		"tints": [
 			{
