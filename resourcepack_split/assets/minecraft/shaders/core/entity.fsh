@@ -9,8 +9,6 @@
 
 uniform sampler2D Sampler0;
 
-uniform mat4 ProjMat;
-
 in float sphericalVertexDistance;
 in float cylindricalVertexDistance;
 in vec4 vertexColor;
