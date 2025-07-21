@@ -43,28 +43,55 @@ https://github.com/user-attachments/assets/648255b9-2317-4c77-b5a4-659bc418a4ef
 
 ### Animated Java: Datapack
 
-1. Export the player rig from Animated Java (AJ). **"Use Storage for Animations" not supported**
-2. Modify the exported datapack using the following script. Copy it to the AJ project folder:
-```bash
-python aj-convert.py
-```
+1. Open [player.ajblueprint](animated-java-resources/player.ajblueprint) with Blockbench.
 
-3. Run `aj-convert.py` in the datapack root folder (make sure it is next to the `data` folder):
-   - **Run this script only once per AJ export!**
-   - Requires `python3`.
-   - Requires `nbtlib`: [https://pypi.org/project/nbtlib/](https://pypi.org/project/nbtlib/).
-   - Usage: `aj-convert.py [aj project name] [optional:flags]`.
+   1.1. In the project settings, select the Minecraft version that matches your release version.
+   *(Use 1.21.5 for versions 1.21.5 to 1.21.8.)*
 
-Available flags:
-- `-pn=[playerName]` : Player skin to use. Default is `''` (no skin), must be set later in-game.
-- `-split` : Player model with extra joints. (Needs to be exported using [player_split.ajblueprint](animated-java-resources/player_split.ajblueprint))
+   1.2. Choose an empty resource pack where we’ll dump the generated files from the plugin.
+   We will **not** use these generated files — instead, we’ll use **only** our custom resource pack: [resourcepack](resourcepack/).
 
-4. Delete the AJ resource pack if no other assets are needed (AJ-generated player assets are not required, as Stable Player Display will be used instead).
-   1. **Do NOT export the AJ project directly into the default RP; use the default RP without modifications.**
-5. Summon the rig following the [AJ Documentation](https://animated-java.dev/docs/introduction/what-is-animated-java).
-   1. **Make sure to use ```execute rotated ~ 0``` when summoning the rig. And NEVER modify the Rotation[1] of the model.**
-   2. Example summon command: ```execute rotated ~ 0 run function animated_java:[project_name]/summon {args:{variant:"default"}}```
-6. Use the provided loot tables (a slim variant is available) to update the AJ model in-game:
+   > \[!IMPORTANT]
+   > **Do NOT export the AJ project directly into the default resource pack. Use the default RP without any modifications.**
+
+   1.3. Set the datapack path to the world where you want the project to run.
+
+   1.4. Export the project. Your datapack files should look like this:
+
+   ![assets](assets/assets.png)
+
+2. Place the script alongside the exported files.
+
+   2.1. Ensure your folder structure looks like this:
+
+   ![assets](assets/assets_script.png)
+
+   2.2. Run the script from the root of the datapack directory:
+
+   * **Only run this script once per AJ export!**
+   * Requires `python3`.
+   * Requires the `nbtlib` library: [https://pypi.org/project/nbtlib/](https://pypi.org/project/nbtlib/).
+   * Usage: `aj-convert.py [aj_project_name] [optional_flags]`
+
+   Available flags:
+
+   * `-pn=[playerName]`: Player skin to use. Default is `''` (no skin); this must be set later in-game.
+   * `-split`: Use a player model with extra joints. *(Must be exported using [player\_split.ajblueprint](animated-java-resources/player_split.ajblueprint).)*
+
+3. Load the resource pack in Minecraft.
+
+4. Summon the rig using the [AJ Documentation](https://animated-java.dev/docs/introduction/what-is-animated-java).
+
+   4.1. **Be sure to use `execute rotated ~ 0` when summoning the rig. NEVER modify `Rotation[1]` of the model.**
+
+   4.2. Example summon command:
+
+   ```mcfunction
+   execute rotated ~ 0 run function animated_java:[project_name]/summon {args:{variant:"default"}}
+   ```
+
+5. Use the provided loot tables (including a slim variant) to update the AJ model in-game.
+
 
 ```
 loot replace entity @e[tag=aj.player_anim.bone.head] hotbar.0 loot minecraft:player/head
@@ -78,12 +105,12 @@ loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot minecraft
 Here is a step by step tutorial:
 
 
-
 https://github.com/user-attachments/assets/a9f9aaac-b3ac-4c86-a81a-4622dfc7c3b4
 
 
 
-### Animated Java: Plugin mode (TODO: Add plugin mode into the script)
+### Animated Java: Plugin mode
+
 1. Export the player rig from Animated Java with plugin mode enabled
 2. When you parsed blueprint, you should change Y translation of rig bones. 
    1. Get current Y translation and subtract from that bone-related offset. (E. g. `headTranslation.y -= headOffset`)
@@ -105,6 +132,16 @@ The same mode as Animated Java: Datapack but the model has extra joints. Don't f
 ![Split Mode](assets/player_anim.gif)
 
 ---
+
+## Update Skin
+
+The [sample_datapack](animated-java-resources/sample_datapack/) provides loot tables to update the skin of the player display.
+
+If you want to specify a skin manually, you can use the following function:
+
+```
+/execute as @e[tag=aj.player_display.root] run function player_display:skin/set_skin {name:"Notch"}
+```
 
 ## Variants
 
