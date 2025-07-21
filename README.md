@@ -51,8 +51,8 @@ https://github.com/user-attachments/assets/648255b9-2317-4c77-b5a4-659bc418a4ef
    1.2. Choose an empty resource pack where we’ll dump the generated files from the plugin.
    We will **not** use these generated files — instead, we’ll use **only** our custom resource pack: [resourcepack](resourcepack/).
 
-   > \[!IMPORTANT]
-   > **Do NOT export the AJ project directly into the default resource pack. Use the default RP without any modifications.**
+> [!IMPORTANT]
+> **Do NOT export the AJ project directly into the default resource pack. Use the default RP without any modifications.**
 
    1.3. Set the datapack path to the world where you want the project to run.
 
