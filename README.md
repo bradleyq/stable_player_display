@@ -77,7 +77,11 @@ loot replace entity @e[tag=aj.player_anim.bone.left_leg] hotbar.0 loot minecraft
 
 Here is a step by step tutorial:
 
-https://github.com/user-attachments/assets/60d93f72-8013-423c-877e-a9c5d1b1a15c
+
+
+https://github.com/user-attachments/assets/a9f9aaac-b3ac-4c86-a81a-4622dfc7c3b4
+
+
 
 ### Animated Java: Plugin mode (TODO: Add plugin mode into the script)
 1. Export the player rig from Animated Java with plugin mode enabled
